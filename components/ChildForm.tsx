@@ -2,12 +2,13 @@
 
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { childSchema, type Child, gradeValues } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 
-type ChildFormValues = {
+type FormValues = {
   name: string;
   grade: string;
   gender: string;
@@ -26,13 +27,14 @@ export function ChildForm({ onSubmit, defaultValues, submitLabel = "Submit" }: C
     handleSubmit,
     formState: { errors },
     reset,
-    setError,
-  } = useForm<ChildFormValues>({
+  } = useForm<FormValues>({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(childSchema) as any,
     defaultValues: {
-      name: defaultValues?.name ?? "",
-      grade: defaultValues?.grade ?? "",
-      gender: defaultValues?.gender ?? "",
-      score: defaultValues?.score ?? undefined,
+      name: "",
+      grade: "",
+      gender: "",
+      score: undefined,
     },
   });
 
@@ -47,28 +49,23 @@ export function ChildForm({ onSubmit, defaultValues, submitLabel = "Submit" }: C
     }
   }, [defaultValues, reset]);
 
-  const handleFormSubmit = (data: ChildFormValues) => {
-    const result = childSchema.safeParse(data);
-    if (!result.success) {
-      result.error.issues.forEach((issue) => {
-        const field = issue.path[0] as string;
-        setError(field as keyof ChildFormValues, { message: issue.message });
-      });
-      return;
-    }
-    onSubmit(result.data);
-  };
-
-  const inputClass = (error?: string) =>
-    cn("w-full", error && "border-destructive");
+  const inputClass = (error?: string) => cn("w-full", error && "border-destructive");
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col gap-3">
+    <form
+      onSubmit={handleSubmit((data) => onSubmit(data as unknown as Child))}
+      className="flex flex-col gap-3"
+    >
       <div className="flex flex-col gap-1">
         <label htmlFor="name" className="text-sm font-medium">
           Name
         </label>
-        <Input id="name" {...register("name")} className={inputClass(errors.name?.message)} placeholder="Student name" />
+        <Input
+          id="name"
+          {...register("name")}
+          className={inputClass(errors.name?.message)}
+          placeholder="Student name"
+        />
         {errors.name && <span className="text-xs text-destructive">{errors.name.message}</span>}
       </div>
 
@@ -81,12 +78,14 @@ export function ChildForm({ onSubmit, defaultValues, submitLabel = "Submit" }: C
           {...register("grade")}
           className={cn(
             "h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
-            errors.grade && "border-destructive"
+            errors.grade && "border-destructive",
           )}
         >
           <option value="">Select...</option>
           {gradeValues.map((g) => (
-            <option key={g} value={g}>{g}</option>
+            <option key={g} value={g}>
+              {g}
+            </option>
           ))}
         </select>
         {errors.grade && <span className="text-xs text-destructive">{errors.grade.message}</span>}
@@ -101,7 +100,7 @@ export function ChildForm({ onSubmit, defaultValues, submitLabel = "Submit" }: C
           {...register("gender")}
           className={cn(
             "h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
-            errors.gender && "border-destructive"
+            errors.gender && "border-destructive",
           )}
         >
           <option value="">Select...</option>

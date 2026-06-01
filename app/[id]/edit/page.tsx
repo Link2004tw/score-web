@@ -9,8 +9,7 @@ import { ChildForm } from "@/components/ChildForm";
 import { Navbar } from "@/components/Navbar";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { updateChildAction } from "@/lib/actions";
-import type { Child } from "@/lib/schemas";
-import type { StoredChild } from "@/lib/schemas";
+import type { Child, StoredChild } from "@/lib/schemas";
 
 export default function EditPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -47,7 +46,12 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
     }
   };
 
-  if (loading) return <p className="text-center py-8 text-muted-foreground" role="status" aria-live="polite">Loading...</p>;
+  if (loading)
+    return (
+      <p className="text-center py-8 text-muted-foreground" role="status" aria-live="polite">
+        Loading...
+      </p>
+    );
 
   if (notFound) {
     return (
@@ -71,7 +75,10 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
       <Navbar />
       <div className="bg-background p-4 md:p-8">
         <div className="mx-auto max-w-2xl space-y-6">
-          <Link href={`/${child.id}`} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+          <Link
+            href={`/${child.id}`}
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+          >
             &larr; Back to {child.name}
           </Link>
           <Card>

@@ -22,5 +22,6 @@ export const env = {
     authProviderX509CertUrl: process.env.FIREBASE_ADMIN_AUTH_PROVIDER_X509_CERT_URL ?? "",
     clientX509CertUrl: process.env.FIREBASE_ADMIN_CLIENT_X509_CERT_URL ?? "",
     universeDomain: process.env.FIREBASE_ADMIN_UNIVERSE_DOMAIN || "googleapis.com",
+    databaseUrl: process.env.FIREBASE_ADMIN_DATABASE_URL ?? "",
   },
 };

@@ -1,4 +1,5 @@
 import "server-only";
+import { writeLog } from "./realtime-log";
 
 interface AuditEntry {
   action: string;
@@ -13,9 +14,13 @@ export function auditLog(entry: AuditEntry) {
     timestamp: entry.timestamp || new Date().toISOString(),
   };
 
+  writeLog(log);
+
   if (process.env.NODE_ENV === "production") {
     console.log(JSON.stringify({ type: "audit", ...log }));
   } else {
-    console.log(`[AUDIT] ${log.action}${log.targetId ? ` ${log.targetId}` : ""}${log.detail ? ` — ${log.detail}` : ""}`);
+    console.log(
+      `[AUDIT] ${log.action}${log.targetId ? ` ${log.targetId}` : ""}${log.detail ? ` — ${log.detail}` : ""}`,
+    );
   }
 }

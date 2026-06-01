@@ -15,10 +15,14 @@ const serviceAccount = {
   universe_domain: env.admin.universeDomain,
 };
 
+const databaseUrl = env.admin.databaseUrl || undefined;
+
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
+    databaseURL: databaseUrl,
   });
 }
 
 export const adminDb = admin.firestore();
+export const adminRtdb: admin.database.Database | null = databaseUrl ? admin.database() : null;
