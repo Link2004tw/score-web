@@ -7,11 +7,15 @@ import { Input } from "@/components/ui/input";
 import { Navbar } from "@/components/Navbar";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { adjustScoreAction } from "@/lib/actions";
+import { gradeValues } from "@/lib/schemas";
+import { filterStudents } from "@/lib/filter";
 import type { StoredChild } from "@/lib/store";
 
 export default function ScorePage() {
   const [children, setChildren] = useState<StoredChild[]>([]);
   const [search, setSearch] = useState("");
+  const [genderFilter, setGenderFilter] = useState<string>("");
+  const [gradeFilter, setGradeFilter] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
   const [customAmount, setCustomAmount] = useState("1");
@@ -26,19 +30,25 @@ export default function ScorePage() {
 
   useEffect(() => {
     fetch("/api/children")
-      .then((res) => res.json())
-      .then((data: StoredChild[]) => {
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch");
+        return res.json();
+      })
+      .then((data) => {
         setChildren(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setChildren([]);
+        setError("Failed to load students.");
         setLoading(false);
       });
   }, []);
 
-  const filtered = useMemo(() => {
-    if (!search) return children;
-    return children.filter((c) =>
-      c.name.toLowerCase().includes(search.toLowerCase())
-    );
-  }, [children, search]);
+  const filtered = useMemo(
+    () => filterStudents(children, { search, gender: genderFilter, grade: gradeFilter }),
+    [children, search, genderFilter, gradeFilter]
+  );
 
   const handleAdjust = async (id: string, delta: number) => {
     console.log("handleAdjust called with:", { id, delta });
@@ -52,7 +62,7 @@ export default function ScorePage() {
       } else {
         setChildren((prev) =>
           prev.map((c) =>
-            c.id === id ? { ...c, score: String(result.score) } : c
+            c.id === id ? { ...c, score: result.score } : c
           )
         );
         setScoreChanged({ id, delta });
@@ -65,6 +75,9 @@ export default function ScorePage() {
   };
 
   if (loading) return <p className="text-center py-8 text-muted-foreground">Loading...</p>;
+
+  const selectClass =
+    "h-10 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
 
   return (
     <ProtectedRoute>
@@ -93,6 +106,20 @@ export default function ScorePage() {
             className="h-12 text-base"
           />
 
+          <div className="flex gap-4">
+            <select value={genderFilter} onChange={(e) => setGenderFilter(e.target.value)} className={selectClass}>
+              <option value="">All Genders</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+            <select value={gradeFilter} onChange={(e) => setGradeFilter(e.target.value)} className={selectClass}>
+              <option value="">All Grades</option>
+              {gradeValues.map((g) => (
+                <option key={g} value={g}>{g}</option>
+              ))}
+            </select>
+          </div>
+
           {error && (
             <p className="text-sm text-destructive text-center py-2">{error}</p>
           )}
@@ -102,7 +129,7 @@ export default function ScorePage() {
               <p className="text-sm text-muted-foreground text-center py-8">
                 {children.length === 0
                   ? "No students yet."
-                  : "No students match your search."}
+                  : "No students match your filters."}
               </p>
             ) : (
               filtered.map((child) => (
@@ -125,7 +152,7 @@ export default function ScorePage() {
                             : ""
                         }`}
                       >
-                        {Number(child.score)}
+                        {child.score}
                       </span>
                       <div className="flex gap-1">
                         <Button

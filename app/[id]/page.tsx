@@ -20,15 +20,15 @@ export default function ChildPage({ params }: { params: Promise<{ id: string }> 
   useEffect(() => {
     fetch(`/api/children/${id}`)
       .then((res) => {
-        if (!res.ok) {
-          setNotFound(true);
-          setLoading(false);
-          return null;
-        }
+        if (!res.ok) throw new Error("Not found");
         return res.json();
       })
-      .then((data: StoredChild | null | undefined) => {
-        if (data) setChild(data);
+      .then((data) => {
+        setChild(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setNotFound(true);
         setLoading(false);
       });
   }, [id]);
@@ -99,7 +99,7 @@ export default function ChildPage({ params }: { params: Promise<{ id: string }> 
                 </div>
                 <div className="flex justify-between border-b pb-2">
                   <dt className="text-sm text-muted-foreground">Score</dt>
-                  <dd className="text-sm font-medium">{Number(child.score)}</dd>
+                  <dd className="text-sm font-medium">{child.score}</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm text-muted-foreground">Added</dt>

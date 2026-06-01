@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getChildById } from "@/lib/store";
+import { getChildById } from "@/lib/admin-store";
 
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

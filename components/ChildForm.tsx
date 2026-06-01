@@ -11,7 +11,7 @@ type ChildFormValues = {
   name: string;
   grade: string;
   gender: string;
-  score: string;
+  score: number;
 };
 
 interface ChildFormProps {
@@ -56,12 +56,7 @@ export function ChildForm({ onSubmit, defaultValues, submitLabel = "Submit" }: C
       });
       return;
     }
-    const score = Number(result.data.score);
-    if (isNaN(score) || score < 0) {
-      setError("score", { message: "Score must be 0 or higher" });
-      return;
-    }
-    onSubmit({ ...result.data, score: String(score) });
+    onSubmit(result.data);
   };
 
   const inputClass = (error?: string) =>

@@ -1,18 +1,18 @@
 "use server";
 
-import { addChild, updateChild, deleteChild, getChildById } from "@/lib/store";
+import { addChild, updateChild, deleteChild, getChildById } from "@/lib/admin-store";
 import type { Child } from "@/lib/schemas";
 
 export async function addChildAction(data: Child) {
   return await addChild(data);
 }
 
-export async function updateChildAction(id: string, data: Partial<Child>) {
-  await updateChild(id, data);
-}
-
 export async function deleteChildAction(id: string) {
   await deleteChild(id);
+}
+
+export async function updateChildAction(id: string, data: Partial<Child>) {
+  await updateChild(id, data);
 }
 
 export async function adjustScoreAction(id: string, delta: number): Promise<{ score: number } | { error: string }> {
@@ -23,7 +23,7 @@ export async function adjustScoreAction(id: string, delta: number): Promise<{ sc
     if (!child) return { error: "Student not found" };
     const newScore = Math.max(0, Number(child.score) + delta);
     console.log("Updating score to:", newScore);
-    await updateChild(id, { score: String(newScore) });
+    await updateChild(id, { score: newScore });
     console.log("Score updated successfully");
     return { score: newScore };
   } catch (e) {

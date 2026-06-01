@@ -22,15 +22,15 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
   useEffect(() => {
     fetch(`/api/children/${id}`)
       .then((res) => {
-        if (!res.ok) {
-          setNotFound(true);
-          setLoading(false);
-          return null;
-        }
+        if (!res.ok) throw new Error("Not found");
         return res.json();
       })
-      .then((data: StoredChild | null | undefined) => {
-        if (data) setChild(data);
+      .then((data) => {
+        setChild(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setNotFound(true);
         setLoading(false);
       });
   }, [id]);

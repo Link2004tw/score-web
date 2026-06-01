@@ -19,13 +19,13 @@ export interface StoredChild extends Child {
   createdAt: string;
 }
 
-function fromFirestore(data: Record<string, unknown>, id: string): StoredChild {
+export function fromFirestore(data: Record<string, unknown>, id: string): StoredChild {
   return {
     id,
     name: data.name as string,
     grade: data.grade as (typeof gradeValues)[number],
     gender: data.gender as "male" | "female",
-    score: data.score as string,
+    score: Number(data.score) || 0,
     createdAt: (data.createdAt as string) ?? new Date().toISOString(),
   };
 }

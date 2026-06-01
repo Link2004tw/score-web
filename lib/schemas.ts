@@ -15,7 +15,7 @@ export const childSchema = z.object({
   name: z.string().min(1, "Name is required"),
   grade: z.enum(gradeValues),
   gender: z.enum(["male", "female"]),
-  score: z.string().min(1, "Score is required"),
+  score: z.coerce.number().min(0, "Score must be 0 or higher"),
 });
 
 export type Child = z.infer<typeof childSchema>;

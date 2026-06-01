@@ -16,6 +16,7 @@ import {
 import { Navbar } from "@/components/Navbar";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { gradeValues } from "@/lib/schemas";
+import { filterStudents } from "@/lib/filter";
 import type { StoredChild } from "@/lib/store";
 
 export default function LeaderboardPage() {
@@ -24,26 +25,32 @@ export default function LeaderboardPage() {
   const [genderFilter, setGenderFilter] = useState<string>("");
   const [gradeFilter, setGradeFilter] = useState<string>("");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     fetch("/api/children")
-      .then((res) => res.json())
-      .then((data: StoredChild[]) => {
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch");
+        return res.json();
+      })
+      .then((data) => {
         setChildren(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setChildren([]);
+        setError(true);
         setLoading(false);
       });
   }, []);
 
-  const filtered = useMemo(() => {
-    return children.filter((child) => {
-      if (search && !child.name.toLowerCase().includes(search.toLowerCase())) return false;
-      if (genderFilter && child.gender !== genderFilter) return false;
-      if (gradeFilter && child.grade !== gradeFilter) return false;
-      return true;
-    });
-  }, [children, search, genderFilter, gradeFilter]);
+  const filtered = useMemo(
+    () => filterStudents(children, { search, gender: genderFilter, grade: gradeFilter }),
+    [children, search, genderFilter, gradeFilter]
+  );
 
   if (loading) return <p className="text-center py-8 text-muted-foreground">Loading...</p>;
+  if (error) return <p className="text-center py-8 text-destructive">Failed to load students.</p>;
 
   const selectClass =
     "h-10 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
@@ -110,7 +117,7 @@ export default function LeaderboardPage() {
                           <TableCell>{child.grade}</TableCell>
                           <TableCell className="capitalize">{child.gender}</TableCell>
                           <TableCell className="text-right font-semibold">
-                            {Number(child.score)}
+                            {child.score}
                           </TableCell>
                         </TableRow>
                       ))}

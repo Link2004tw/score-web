@@ -36,9 +36,9 @@ service cloud.firestore {
         ]
         // gender: male or female
         && request.resource.data.gender in ["male", "female"]
-        // score: required string (even if it represents a number)
-        && request.resource.data.score is string
-        && request.resource.data.score.size() > 0
+        // score: required non-negative number
+        && request.resource.data.score is number
+        && request.resource.data.score >= 0
         // createdAt: must be a string (auto-generated server-side)
         && request.resource.data.createdAt is string;
 
@@ -61,10 +61,10 @@ service cloud.firestore {
         // gender: optional, but if provided must be valid
         && (!request.resource.data.keys().hasAny(["gender"])
             || request.resource.data.gender in ["male", "female"])
-        // score: optional, but if provided must be a non-empty string
+        // score: optional, but if provided must be a non-negative number
         && (!request.resource.data.keys().hasAny(["score"])
-            || (request.resource.data.score is string
-                && request.resource.data.score.size() > 0));
+            || (request.resource.data.score is number
+                && request.resource.data.score >= 0));
 
       // ── DELETE ────────────────────────────────
       // Any authenticated user can delete
