@@ -1,0 +1,159 @@
+"use client";
+
+import { useEffect, useState, useMemo } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Navbar } from "@/components/Navbar";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { adjustScoreAction } from "@/lib/actions";
+import type { StoredChild } from "@/lib/store";
+
+export default function ScorePage() {
+  const [children, setChildren] = useState<StoredChild[]>([]);
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState<string | null>(null);
+  const [customAmount, setCustomAmount] = useState("1");
+  const [error, setError] = useState<string | null>(null);
+  const [scoreChanged, setScoreChanged] = useState<{ id: string; delta: number } | null>(null);
+
+  useEffect(() => {
+    if (!scoreChanged) return;
+    const timer = setTimeout(() => setScoreChanged(null), 600);
+    return () => clearTimeout(timer);
+  }, [scoreChanged]);
+
+  useEffect(() => {
+    fetch("/api/children")
+      .then((res) => res.json())
+      .then((data: StoredChild[]) => {
+        setChildren(data);
+        setLoading(false);
+      });
+  }, []);
+
+  const filtered = useMemo(() => {
+    if (!search) return children;
+    return children.filter((c) =>
+      c.name.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [children, search]);
+
+  const handleAdjust = async (id: string, delta: number) => {
+    console.log("handleAdjust called with:", { id, delta });
+    setError(null);
+    setUpdating(id);
+    try {
+      const result = await adjustScoreAction(id, delta);
+      console.log("adjustScoreAction result:", result);
+      if ("error" in result) {
+        setError(result.error);
+      } else {
+        setChildren((prev) =>
+          prev.map((c) =>
+            c.id === id ? { ...c, score: String(result.score) } : c
+          )
+        );
+        setScoreChanged({ id, delta });
+      }
+    } catch (e) {
+      console.error("adjustScoreAction threw:", e);
+      setError(e instanceof Error ? e.message : "Something went wrong");
+    }
+    setUpdating(null);
+  };
+
+  if (loading) return <p className="text-center py-8 text-muted-foreground">Loading...</p>;
+
+  return (
+    <ProtectedRoute>
+      <Navbar />
+      <div className="bg-background p-4 md:p-8">
+        <div className="mx-auto max-w-2xl space-y-4">
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-bold tracking-tight">Adjust Scores</h1>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Amount:</span>
+              <Input
+                type="number"
+                value={customAmount}
+                onChange={(e) => setCustomAmount(e.target.value)}
+                className="h-10 w-20 text-center"
+                min={1}
+                max={100}
+              />
+            </div>
+          </div>
+
+          <Input
+            placeholder="Search students..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="h-12 text-base"
+          />
+
+          {error && (
+            <p className="text-sm text-destructive text-center py-2">{error}</p>
+          )}
+
+          <div className="space-y-2">
+            {filtered.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-8">
+                {children.length === 0
+                  ? "No students yet."
+                  : "No students match your search."}
+              </p>
+            ) : (
+              filtered.map((child) => (
+                <Card key={child.id}>
+                  <CardContent className="flex items-center justify-between py-3">
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium truncate">{child.name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {child.grade} &middot; {child.gender}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <span
+                        className={`text-lg font-semibold w-10 text-right tabular-nums transition-all duration-300 ${
+                          scoreChanged?.id === child.id
+                            ? scoreChanged.delta > 0
+                              ? "animate-score-bump text-primary"
+                              : "animate-score-bump text-destructive"
+                            : ""
+                        }`}
+                      >
+                        {Number(child.score)}
+                      </span>
+                      <div className="flex gap-1">
+                        <Button
+                          size="icon"
+                          variant="destructive"
+                          className="size-8"
+                          disabled={updating === child.id}
+                          onClick={() => handleAdjust(child.id, -Number(customAmount))}
+                        >
+                          &minus;
+                        </Button>
+                        <Button
+                          size="icon"
+                          className="size-8"
+                          disabled={updating === child.id}
+                          onClick={() => handleAdjust(child.id, Number(customAmount))}
+                        >
+                          +
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+    </ProtectedRoute>
+  );
+}

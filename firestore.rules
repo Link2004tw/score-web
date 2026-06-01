@@ -1,0 +1,74 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ──────────────────────────────────────────────
+    //  ALL DOCUMENTS — base rules
+    // ──────────────────────────────────────────────
+
+    // Deny everything unless explicitly allowed below
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ──────────────────────────────────────────────
+    //  children COLLECTION
+    // ──────────────────────────────────────────────
+
+    match /children/{childId} {
+
+      // ── READ ──────────────────────────────────
+      // Any authenticated user can read all children
+      allow read: if request.auth != null;
+
+      // ── CREATE ────────────────────────────────
+      // Authenticated users can create with validated fields
+      allow create: if request.auth != null
+        // name: required, non-empty string
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        // grade: must be one of the valid grades
+        && request.resource.data.grade in [
+          "kg1", "kg2",
+          "1 primary", "2 primary", "3 primary",
+          "4 primary", "5 primary", "6 primary"
+        ]
+        // gender: male or female
+        && request.resource.data.gender in ["male", "female"]
+        // score: required string (even if it represents a number)
+        && request.resource.data.score is string
+        && request.resource.data.score.size() > 0
+        // createdAt: must be a string (auto-generated server-side)
+        && request.resource.data.createdAt is string;
+
+      // ── UPDATE ────────────────────────────────
+      // Authenticated users can update; only allow specific fields
+      allow update: if request.auth != null
+        // Only allow changes to allowed fields (prevent overwriting createdAt)
+        && request.resource.data.keys().hasOnly(["name", "grade", "gender", "score"])
+        // name: optional, but if provided must be valid
+        && (!request.resource.data.keys().hasAny(["name"])
+            || (request.resource.data.name is string
+                && request.resource.data.name.size() > 0))
+        // grade: optional, but if provided must be valid
+        && (!request.resource.data.keys().hasAny(["grade"])
+            || request.resource.data.grade in [
+              "kg1", "kg2",
+              "1 primary", "2 primary", "3 primary",
+              "4 primary", "5 primary", "6 primary"
+            ])
+        // gender: optional, but if provided must be valid
+        && (!request.resource.data.keys().hasAny(["gender"])
+            || request.resource.data.gender in ["male", "female"])
+        // score: optional, but if provided must be a non-empty string
+        && (!request.resource.data.keys().hasAny(["score"])
+            || (request.resource.data.score is string
+                && request.resource.data.score.size() > 0));
+
+      // ── DELETE ────────────────────────────────
+      // Any authenticated user can delete
+      allow delete: if request.auth != null;
+    }
+  }
+}
