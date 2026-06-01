@@ -18,11 +18,29 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
   const [notFound, setNotFound] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (data: Child) => {
+    if (!child) return;
+    try {
+      console.log(data);
+      await updateChildAction(child.id, data);
+      router.push(`/${child.id}`);
+    } catch (e) {
+      if (e instanceof Error && e.name === "AuthError") {
+        router.push("/login");
+      } else {
+        setError(e instanceof Error ? e.message : "Failed to save changes. Please try again.");
+      }
+    }
+  };
+
   useEffect(() => {
     fetch(`/api/children/${id}`)
       .then((res) => {
         if (res.status === 401) throw new Error("Unauthorized");
-        if (!res.ok) throw new Error("Not found");
+        if (res.status === 404) throw new Error("Not found");
+        if (!res.ok) throw new Error(`Failed to load student (status ${res.status})`);
         return res.json();
       })
       .then((data) => {
@@ -30,21 +48,16 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
         setLoading(false);
       })
       .catch((e) => {
-        if (e.message === "Unauthorized") router.push("/login");
-        setNotFound(true);
         setLoading(false);
+        if (e.message === "Unauthorized") {
+          router.push("/login");
+        } else if (e.message === "Not found") {
+          setNotFound(true);
+        } else {
+          setError(e.message);
+        }
       });
   }, [id, router]);
-
-  const handleSubmit = async (data: Child) => {
-    if (!child) return;
-    try {
-      await updateChildAction(child.id, data);
-      router.push(`/${child.id}`);
-    } catch {
-      router.push("/login");
-    }
-  };
 
   if (loading)
     return (
@@ -81,6 +94,15 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
           >
             &larr; Back to {child.name}
           </Link>
+          {error && (
+            <div
+              className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive"
+              role="alert"
+              aria-live="assertive"
+            >
+              {error}
+            </div>
+          )}
           <Card>
             <CardHeader>
               <CardTitle>Edit {child.name}</CardTitle>

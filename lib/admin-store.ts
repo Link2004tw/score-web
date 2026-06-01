@@ -21,7 +21,12 @@ export async function addChild(child: Child): Promise<StoredChild> {
     createdAt: new Date().toISOString(),
   };
   const ref = await adminDb.collection(COLLECTION).add(data);
-  auditLog({ action: "addChild", targetId: ref.id, detail: child.name });
+  auditLog({
+    action: "addChild",
+    targetId: ref.id,
+    targetName: child.name,
+    detail: child.name,
+  });
   return fromAdminSnapshot({ ...data, id: ref.id }, ref.id);
 }
 
@@ -58,13 +63,23 @@ export async function getChildById(id: string): Promise<StoredChild | undefined>
 
 export async function updateChild(id: string, updates: Partial<Child>): Promise<void> {
   const ref = adminDb.collection(COLLECTION).doc(id);
+
+  // Fetch name before update so we can store it in the audit log
+  const before = await ref.get();
+  const targetName = before.exists ? ((before.data()?.name as string) ?? undefined) : undefined;
+
   await ref.update(updates);
   const changed = Object.keys(updates).join(", ");
-  auditLog({ action: "updateChild", targetId: id, detail: changed });
+  auditLog({ action: "updateChild", targetId: id, targetName, detail: changed });
 }
 
 export async function deleteChild(id: string): Promise<void> {
   const ref = adminDb.collection(COLLECTION).doc(id);
+
+  // Fetch name before delete so we can store it in the audit log
+  const before = await ref.get();
+  const targetName = before.exists ? ((before.data()?.name as string) ?? undefined) : undefined;
+
   await ref.delete();
-  auditLog({ action: "deleteChild", targetId: id });
+  auditLog({ action: "deleteChild", targetId: id, targetName });
 }

@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { childSchema, type Child, gradeValues } from "@/lib/schemas";
@@ -12,29 +11,28 @@ type FormValues = {
   name: string;
   grade: string;
   gender: string;
-  score: number | undefined;
+  score: string;
 };
 
 interface ChildFormProps {
-  onSubmit: (data: Child) => void;
+  onSubmit: (data: Child) => Promise<void>;
   defaultValues?: Partial<Child>;
   submitLabel?: string;
 }
 
 export function ChildForm({ onSubmit, defaultValues, submitLabel = "Submit" }: ChildFormProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm<FormValues>({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    resolver: zodResolver(childSchema) as any,
     defaultValues: {
       name: "",
       grade: "",
       gender: "",
-      score: undefined,
+      score: "",
     },
   });
 
@@ -44,18 +42,35 @@ export function ChildForm({ onSubmit, defaultValues, submitLabel = "Submit" }: C
         name: defaultValues.name ?? "",
         grade: defaultValues.grade ?? "",
         gender: defaultValues.gender ?? "",
-        score: defaultValues.score ?? undefined,
+        score: defaultValues.score != null ? String(defaultValues.score) : "",
       });
     }
   }, [defaultValues, reset]);
 
   const inputClass = (error?: string) => cn("w-full", error && "border-destructive");
 
+  const onFormSubmit = async (data: FormValues) => {
+    setIsSubmitting(true);
+    try {
+      const parsed = childSchema.safeParse({
+        name: data.name,
+        grade: data.grade,
+        gender: data.gender,
+        score: data.score === "" ? undefined : Number(data.score),
+      });
+
+      if (!parsed.success) {
+        return;
+      }
+
+      await onSubmit(parsed.data);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <form
-      onSubmit={handleSubmit((data) => onSubmit(data as unknown as Child))}
-      className="flex flex-col gap-3"
-    >
+    <form onSubmit={handleSubmit(onFormSubmit)} className="flex flex-col gap-3">
       <div className="flex flex-col gap-1">
         <label htmlFor="name" className="text-sm font-medium">
           Name
@@ -125,8 +140,8 @@ export function ChildForm({ onSubmit, defaultValues, submitLabel = "Submit" }: C
         {errors.score && <span className="text-xs text-destructive">{errors.score.message}</span>}
       </div>
 
-      <Button type="submit" size="lg" className="mt-2">
-        {submitLabel}
+      <Button type="submit" size="lg" className="mt-2" disabled={isSubmitting}>
+        {isSubmitting ? "Saving..." : submitLabel}
       </Button>
     </form>
   );

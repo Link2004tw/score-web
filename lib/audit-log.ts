@@ -4,6 +4,8 @@ import { writeLog } from "./realtime-log";
 interface AuditEntry {
   action: string;
   targetId?: string;
+  /** Optional display name for the target (e.g. child.name) */
+  targetName?: string;
   detail?: string;
   timestamp?: string;
 }

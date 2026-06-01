@@ -40,6 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    if (loading) return;
     if (!user) {
       document.cookie = "fb_token=; path=/; max-age=0; SameSite=Lax";
       return;
@@ -53,7 +54,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     updateToken();
     const interval = setInterval(updateToken, 55 * 60 * 1000);
     return () => clearInterval(interval);
-  }, [user]);
+  }, [user, loading]);
 
   const signUp = async (email: string, password: string, displayName: string) => {
     const { user } = await createUserWithEmailAndPassword(auth, email, password);

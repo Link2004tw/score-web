@@ -24,14 +24,29 @@ export function Navbar() {
         </Link>
 
         <div className="flex items-center gap-4">
-          <Link href="/leaderboard" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <Link
+            href="/leaderboard"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
             Leaderboard
           </Link>
-          <Link href="/create" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <Link
+            href="/create"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
             Add Student
           </Link>
-          <Link href="/score" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <Link
+            href="/score"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
             Score
+          </Link>
+          <Link
+            href="/logs"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Logs
           </Link>
         </div>
 
