@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -21,51 +21,104 @@ import { filterStudents } from "@/lib/filter";
 import type { StoredChild } from "@/lib/schemas";
 import { getChildColor, colorDot } from "@/lib/color";
 
+interface PageData {
+  children: StoredChild[];
+  hasMore: boolean;
+}
+
+const PAGE_SIZE = 50;
+
 export default function LeaderboardPage() {
   const router = useRouter();
   const [children, setChildren] = useState<StoredChild[]>([]);
-  const [search, setSearch] = useState("");
-  const [genderFilter, setGenderFilter] = useState<string>("");
-  const [gradeFilter, setGradeFilter] = useState<string>("");
+  const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(false);
+  const [search, setSearch] = useState("");
+  const [genderFilter, setGenderFilter] = useState("");
+  const [gradeFilter, setGradeFilter] = useState("");
+
+  const buildUrl = useCallback((startAfter?: { score: number; id: string }) => {
+    const params = new URLSearchParams({ limit: String(PAGE_SIZE) });
+    if (startAfter) {
+      params.set("score", String(startAfter.score));
+      params.set("id", startAfter.id);
+    }
+    return `/api/children?${params}`;
+  }, []);
+
+  const fetchPage = useCallback(
+    async (startAfter?: { score: number; id: string }) => {
+      const res = await fetch(buildUrl(startAfter));
+      if (res.status === 401) throw new Error("Unauthorized");
+      if (!res.ok) throw new Error("Failed to fetch");
+      return (await res.json()) as PageData;
+    },
+    [buildUrl],
+  );
+
+  const loadFirstPage = useCallback(async () => {
+    setLoading(true);
+    setError(false);
+    try {
+      const data = await fetchPage();
+      setChildren(data.children);
+      setHasMore(data.hasMore);
+    } catch (e) {
+      setChildren([]);
+      setHasMore(false);
+      setError(true);
+      if (e instanceof Error && e.message === "Unauthorized") router.push("/login");
+    }
+    setLoading(false);
+  }, [fetchPage, router]);
 
   useEffect(() => {
-    fetch("/api/children")
-      .then((res) => {
-        if (res.status === 401) throw new Error("Unauthorized");
-        if (!res.ok) throw new Error("Failed to fetch");
-        return res.json();
-      })
-      .then((data) => {
-        setChildren(data);
-        setLoading(false);
-      })
-      .catch((e) => {
-        setChildren([]);
-        setError(true);
-        setLoading(false);
-        if (e.message === "Unauthorized") router.push("/login");
-      });
-  }, [router]);
+    loadFirstPage();
+  }, [loadFirstPage]);
+
+  const loadMore = async () => {
+    if (loadingMore || !hasMore || children.length === 0) return;
+    setLoadingMore(true);
+    try {
+      const last = children[children.length - 1];
+      const data = await fetchPage({ score: last.score, id: last.id });
+      setChildren((prev) => [...prev, ...data.children]);
+      setHasMore(data.hasMore);
+    } catch {
+      setError(true);
+    }
+    setLoadingMore(false);
+  };
+
+  const handleFilterChange = () => {
+    setSearch("");
+    setGenderFilter("");
+    setGradeFilter("");
+    loadFirstPage();
+  };
 
   const filtered = useMemo(
     () => filterStudents(children, { search, gender: genderFilter, grade: gradeFilter }),
     [children, search, genderFilter, gradeFilter],
   );
 
-  if (loading)
+  if (loading) {
     return (
       <p className="text-center py-8 text-muted-foreground" role="status" aria-live="polite">
         Loading...
       </p>
     );
-  if (error)
+  }
+
+  if (error) {
     return (
       <p className="text-center py-8 text-destructive" role="alert">
         Failed to load students.
       </p>
     );
+  }
 
   const selectClass =
     "h-10 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
@@ -153,6 +206,17 @@ export default function LeaderboardPage() {
                   </Table>
                 </div>
               )}
+
+              <div className="flex items-center justify-between pt-4">
+                <p className="text-sm text-muted-foreground">
+                  Showing {filtered.length} of {children.length} loaded
+                </p>
+                {hasMore && (
+                  <Button variant="outline" size="sm" onClick={loadMore} disabled={loadingMore}>
+                    {loadingMore ? "Loading..." : "Load More"}
+                  </Button>
+                )}
+              </div>
             </CardContent>
           </Card>
         </div>

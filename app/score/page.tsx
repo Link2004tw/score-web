@@ -32,14 +32,14 @@ export default function ScorePage() {
   }, [scoreChanged]);
 
   useEffect(() => {
-    fetch("/api/children")
+    fetch("/api/children?limit=500")
       .then((res) => {
         if (res.status === 401) throw new Error("Unauthorized");
         if (!res.ok) throw new Error("Failed to fetch");
         return res.json();
       })
-      .then((data) => {
-        setChildren(data);
+      .then((data: { children: StoredChild[] }) => {
+        setChildren(data.children);
         setLoading(false);
       })
       .catch((e) => {

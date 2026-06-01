@@ -4,10 +4,7 @@ import { auditLog } from "./audit-log";
 
 const COLLECTION = "children";
 
-function fromAdminSnapshot(
-  data: FirebaseFirestore.DocumentData,
-  id: string
-): StoredChild {
+function fromAdminSnapshot(data: FirebaseFirestore.DocumentData, id: string): StoredChild {
   return {
     id,
     name: data.name as string,
@@ -28,27 +25,38 @@ export async function addChild(child: Child): Promise<StoredChild> {
   return fromAdminSnapshot({ ...data, id: ref.id }, ref.id);
 }
 
-export async function getChildren(): Promise<StoredChild[]> {
-  const snapshot = await adminDb
+export async function getChildren(opts?: {
+  limit?: number;
+  startAfterScore?: number;
+  startAfterId?: string;
+}): Promise<{ children: StoredChild[]; hasMore: boolean }> {
+  const take = Math.min(opts?.limit ?? 50, 500);
+  let query = adminDb
     .collection(COLLECTION)
     .orderBy("score", "desc")
-    .get();
-  return snapshot.docs.map((d) => fromAdminSnapshot(d.data(), d.id));
+    .orderBy("__name__", "desc")
+    .limit(take + 1);
+
+  if (opts?.startAfterScore !== undefined && opts?.startAfterId) {
+    query = query.startAfter(opts.startAfterScore, opts.startAfterId);
+  }
+
+  const snapshot = await query.get();
+  const docs = snapshot.docs.slice(0, take);
+  return {
+    children: docs.map((d) => fromAdminSnapshot(d.data(), d.id)),
+    hasMore: snapshot.docs.length > take,
+  };
 }
 
-export async function getChildById(
-  id: string
-): Promise<StoredChild | undefined> {
+export async function getChildById(id: string): Promise<StoredChild | undefined> {
   const ref = adminDb.collection(COLLECTION).doc(id);
   const snapshot = await ref.get();
   if (!snapshot.exists) return undefined;
   return fromAdminSnapshot(snapshot.data()!, snapshot.id);
 }
 
-export async function updateChild(
-  id: string,
-  updates: Partial<Child>
-): Promise<void> {
+export async function updateChild(id: string, updates: Partial<Child>): Promise<void> {
   const ref = adminDb.collection(COLLECTION).doc(id);
   await ref.update(updates);
   const changed = Object.keys(updates).join(", ");

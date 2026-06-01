@@ -13,28 +13,40 @@ The app uses two data access patterns:
 
 ### `GET /api/children`
 
-Returns all students sorted by score (descending).
+Returns students sorted by score (descending), with cursor-based pagination.
 
-**Response:** `StoredChild[]`
+**Query params (optional):**
+
+- `limit` (number): page size (default `50`, capped by the server)
+- Cursor params (used together to load subsequent pages):
+  - `score` (number): the last item's score from the previous page
+  - `id` (string): the last item's id from the previous page
+
+**Response:** `{ children: StoredChild[]; hasMore: boolean }`
 
 ```json
-[
-  {
-    "id": "abc123",
-    "name": "Alice Smith",
-    "grade": "3 primary",
-    "gender": "female",
-    "score": "95",
-    "createdAt": "2026-05-31T21:51:49.763Z"
-  }
-]
+{
+  "children": [
+    {
+      "id": "abc123",
+      "name": "Alice Smith",
+      "grade": "3 primary",
+      "gender": "female",
+      "score": "95",
+      "createdAt": "2026-05-31T21:51:49.763Z"
+    }
+  ],
+  "hasMore": true
+}
 ```
 
 **Errors:**
 
-| Status | Body                              |
-| ------ | --------------------------------- |
-| 500    | `{ "error": "Failed to fetch children" }` |
+| Status | Body                                                      |
+| ------ | --------------------------------------------------------- |
+| 401    | `{ "error": "Unauthorized" }` _(if auth missing/invalid)_ |
+| 429    | `{ "error": "Too many requests" }`                        |
+| 500    | `{ "error": "Failed to fetch children" }`                 |
 
 ---
 
@@ -57,10 +69,10 @@ Returns a single student by ID.
 
 **Errors:**
 
-| Status | Body                                       |
-| ------ | ------------------------------------------ |
-| 404    | `{ "error": "Child not found" }`           |
-| 500    | `{ "error": "Failed to fetch child" }`     |
+| Status | Body                                   |
+| ------ | -------------------------------------- |
+| 404    | `{ "error": "Child not found" }`       |
+| 500    | `{ "error": "Failed to fetch child" }` |
 
 ---
 
@@ -91,10 +103,10 @@ Updates a student's fields. Accepts a partial `Child` object.
 
 **Errors:**
 
-| Status | Body                                       |
-| ------ | ------------------------------------------ |
-| 404    | `{ "error": "Child not found" }`           |
-| 500    | `{ "error": "Failed to update child" }`    |
+| Status | Body                                    |
+| ------ | --------------------------------------- |
+| 404    | `{ "error": "Child not found" }`        |
+| 500    | `{ "error": "Failed to update child" }` |
 
 ---
 
@@ -214,11 +226,29 @@ interface StoredChild extends Child {
 ### Reading data
 
 ```tsx
+// Initial load
 useEffect(() => {
-  fetch("/api/children")
+  fetch("/api/children?limit=50")
     .then((res) => res.json())
-    .then((data: StoredChild[]) => setChildren(data));
+    .then((data: { children: StoredChild[]; hasMore: boolean }) => {
+      setChildren(data.children);
+      setHasMore(data.hasMore);
+    });
 }, []);
+
+// Load more (cursor pagination)
+async function loadMore() {
+  const last = children[children.length - 1];
+  if (!last) return;
+
+  const res = await fetch(
+    `/api/children?limit=50&score=${encodeURIComponent(last.score)}&id=${encodeURIComponent(last.id)}`,
+  );
+  const data = await res.json();
+
+  setChildren((prev) => [...prev, ...data.children]);
+  setHasMore(data.hasMore);
+}
 ```
 
 ### Writing data

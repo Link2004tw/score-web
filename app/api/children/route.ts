@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { getChildren } from "@/lib/admin-store";
 import { requireAuthApi, AuthError } from "@/lib/verify-auth";
 import { rateLimit } from "@/lib/rate-limit";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     const ip = request.headers.get("x-forwarded-for") ?? "unknown";
     const { success } = rateLimit(`api:${ip}`, { maxRequests: 60, windowMs: 60_000 });
@@ -12,8 +13,16 @@ export async function GET(request: Request) {
     }
 
     await requireAuthApi(request);
-    const children = await getChildren();
-    return NextResponse.json(children);
+
+    const { searchParams } = request.nextUrl;
+    const limit = Math.min(Number(searchParams.get("limit")) || 50, 500);
+    const startAfterScore = searchParams.get("score")
+      ? Number(searchParams.get("score"))
+      : undefined;
+    const startAfterId = searchParams.get("id") || undefined;
+
+    const result = await getChildren({ limit, startAfterScore, startAfterId });
+    return NextResponse.json(result);
   } catch (error) {
     if (error instanceof AuthError) {
       return NextResponse.json({ error: error.message }, { status: 401 });
