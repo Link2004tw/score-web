@@ -12,16 +12,16 @@ A minimalist, mobile-first scoreboard web application built for teachers to trac
 
 ## Tech Stack
 
-| Layer               | Technology                                     |
-| ------------------- | ---------------------------------------------- |
-| **Framework**       | Next.js 16 (App Router)                        |
-| **Language**        | TypeScript                                     |
-| **Styling**         | Tailwind CSS v4 + shadcn/ui (base-nova style)  |
-| **Auth**            | Firebase Authentication                        |
-| **Database**        | Cloud Firestore                                |
-| **Forms**           | react-hook-form + Zod validation               |
-| **Icons**           | Lucide React                                   |
-| **Fonts**           | Geist (Vercel)                                 |
+| Layer         | Technology                                    |
+| ------------- | --------------------------------------------- |
+| **Framework** | Next.js 16 (App Router)                       |
+| **Language**  | TypeScript                                    |
+| **Styling**   | Tailwind CSS v4 + shadcn/ui (base-nova style) |
+| **Auth**      | Firebase Authentication                       |
+| **Database**  | Cloud Firestore                               |
+| **Forms**     | react-hook-form + Zod validation              |
+| **Icons**     | Lucide React                                  |
+| **Fonts**     | Geist (Vercel)                                |
 
 ## Quick Start
 
@@ -48,24 +48,18 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### Firebase Configuration
 
-The project uses environment variables for Firebase config. Copy the example file and fill in your values:
+The project connects to Firebase out of the box using the built-in config. To use your own Firebase project, update the config in `lib/firebase.ts`:
 
-```bash
-cp .env.example .env
+```ts
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.firebasestorage.app",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID",
+};
 ```
-
-Then edit `.env` with your Firebase project values from the [Firebase Console](https://console.firebase.google.com/) → Project Settings → Your apps:
-
-| Variable | Example |
-|----------|---------|
-| `NEXT_PUBLIC_FIREBASE_API_KEY` | `AIzaSy...` |
-| `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | `your-project.firebaseapp.com` |
-| `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | `your-project` |
-| `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | `your-project.firebasestorage.app` |
-| `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | `123456789` |
-| `NEXT_PUBLIC_FIREBASE_APP_ID` | `1:123456789:web:abc...` |
-
-> ⚠️ `.env` is gitignored. For deployment, set these as environment variables in Vercel (see [Deployment](#deployment) section).
 
 ### Firestore Security Rules
 
@@ -112,12 +106,12 @@ lib/
 
 ## Scripts
 
-| Command            | Description              |
-| ------------------ | ------------------------ |
-| `npm run dev`      | Start dev server         |
-| `npm run build`    | Production build         |
-| `npm run start`    | Start production server  |
-| `npm run lint`     | Run ESLint               |
+| Command         | Description             |
+| --------------- | ----------------------- |
+| `npm run dev`   | Start dev server        |
+| `npm run build` | Production build        |
+| `npm run start` | Start production server |
+| `npm run lint`  | Run ESLint              |
 
 ## Usage
 
@@ -163,11 +157,13 @@ The **`firebase.json`** config in the project root tells Firebase CLI which rule
 The project includes two GitHub Actions workflows:
 
 **1. CI** — Runs on every push and pull request to `main`:
+
 - `npm run lint` — ESLint
 - `npx tsc --noEmit` — TypeScript type check
 - `npm run build` — Next.js production build
 
 **2. Deploy** — Runs on push to `main` (or manually via `workflow_dispatch`):
+
 - Deploys the app to **Vercel** (production)
 - Optionally deploys **Firestore security rules**
 
@@ -175,12 +171,12 @@ The project includes two GitHub Actions workflows:
 
 Set these in your GitHub repository: **Settings → Secrets and variables → Actions**:
 
-| Secret | Description | How to get it |
-|--------|-------------|---------------|
-| `VERCEL_TOKEN` | Vercel API token | [Vercel Account → Tokens](https://vercel.com/account/tokens) |
-| `VERCEL_ORG_ID` | Vercel team ID | `vercel ls` in your project, or Vercel dashboard URL |
+| Secret              | Description       | How to get it                                                    |
+| ------------------- | ----------------- | ---------------------------------------------------------------- |
+| `VERCEL_TOKEN`      | Vercel API token  | [Vercel Account → Tokens](https://vercel.com/account/tokens)     |
+| `VERCEL_ORG_ID`     | Vercel team ID    | `vercel ls` in your project, or Vercel dashboard URL             |
 | `VERCEL_PROJECT_ID` | Vercel project ID | `vercel link` in your project, then check `.vercel/project.json` |
-| `FIREBASE_TOKEN` | Firebase CI token | `firebase login:ci` in your terminal |
+| `FIREBASE_TOKEN`    | Firebase CI token | `firebase login:ci` in your terminal                             |
 
 > **Tip:** Run `npx vercel link` locally first to create your Vercel project, then copy the IDs from `.vercel/project.json`.
 

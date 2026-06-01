@@ -41,25 +41,30 @@
 
 ## 3. Configure the Project
 
-The Firebase config is loaded from environment variables (defined in `.env`):
+The Firebase config is stored directly in `lib/firebase.ts`:
 
-```bash
-# Copy the example file and fill in your values
-cp .env.example .env
+```ts
+// lib/firebase.ts
+const firebaseConfig = {
+  apiKey: "AIzaSy...",
+  authDomain: "your-project.firebaseapp.com",
+  projectId: "your-project",
+  storageBucket: "your-project.firebasestorage.app",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abc123...",
+};
 ```
 
-Then edit `.env` with your Firebase project values:
+Replace the values with your own Firebase project config.
 
-| Variable | Example |
-|----------|---------|
-| `NEXT_PUBLIC_FIREBASE_API_KEY` | `AIzaSy...` |
-| `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | `your-project.firebaseapp.com` |
-| `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | `your-project` |
-| `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | `your-project.firebasestorage.app` |
-| `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | `123456789` |
-| `NEXT_PUBLIC_FIREBASE_APP_ID` | `1:123456789:web:abc...` |
-
-> ⚠️ `.env` is gitignored (see `.gitignore`). Never commit secrets to version control.
+> **Note:** For development, hardcoding the config is acceptable since Firebase security rules are the real gatekeeper. For production, consider using environment variables:
+>
+> ```ts
+> const firebaseConfig = {
+>   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+>   // ...
+> };
+> ```
 
 ---
 
@@ -87,12 +92,12 @@ The `firebase.json` file in the project root already points to `firestore.rules`
 
 ### Rule Summary
 
-| Operation | Rule |
-|-----------|------|
-| **Read**  | Any authenticated user can read all children |
-| **Create** | Authenticated only; validates `name`, `grade`, `gender`, `score`, and `createdAt` |
+| Operation  | Rule                                                                                              |
+| ---------- | ------------------------------------------------------------------------------------------------- |
+| **Read**   | Any authenticated user can read all children                                                      |
+| **Create** | Authenticated only; validates `name`, `grade`, `gender`, `score`, and `createdAt`                 |
 | **Update** | Authenticated only; only allows changes to `name`, `grade`, `gender`, `score` (locks `createdAt`) |
-| **Delete** | Any authenticated user can delete |
+| **Delete** | Any authenticated user can delete                                                                 |
 
 See the full rules in [`firestore.rules`](../firestore.rules).
 
@@ -112,12 +117,12 @@ The app will be available at [http://localhost:3000](http://localhost:3000).
 
 ### Available Scripts
 
-| Command            | Description                    |
-| ------------------ | ------------------------------ |
-| `npm run dev`      | Start Next.js dev server       |
-| `npm run build`    | Production build               |
-| `npm run start`    | Start production server        |
-| `npm run lint`     | Run ESLint across the project  |
+| Command         | Description                   |
+| --------------- | ----------------------------- |
+| `npm run dev`   | Start Next.js dev server      |
+| `npm run build` | Production build              |
+| `npm run start` | Start production server       |
+| `npm run lint`  | Run ESLint across the project |
 
 ---
 
@@ -132,18 +137,16 @@ The app will be available at [http://localhost:3000](http://localhost:3000).
 
 No additional configuration is needed — Vercel detects Next.js automatically.
 
-### Environment Variables
+### Environment Variables (optional)
 
-Since the Firebase config now uses environment variables, add these in Vercel under **Project Settings → Environment Variables**:
+If you move the Firebase config to environment variables, add these in Vercel:
 
-| Variable                         | Value                |
-| -------------------------------- | -------------------- |
-| `NEXT_PUBLIC_FIREBASE_API_KEY`   | Your API key         |
-| `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | Your auth domain   |
-| `NEXT_PUBLIC_FIREBASE_PROJECT_ID`  | Your project ID     |
-| `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | Your storage bucket |
-| `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | Your sender ID |
-| `NEXT_PUBLIC_FIREBASE_APP_ID`    | Your app ID         |
+| Variable                           | Value            |
+| ---------------------------------- | ---------------- |
+| `NEXT_PUBLIC_FIREBASE_API_KEY`     | Your API key     |
+| `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | Your auth domain |
+| `NEXT_PUBLIC_FIREBASE_PROJECT_ID`  | Your project ID  |
+| ...                                | ...              |
 
 ---
 
@@ -155,26 +158,26 @@ The app uses a single Firestore collection: `children`.
 
 ```typescript
 interface Child {
-  name: string;       // Student's full name
-  grade: string;      // One of: kg1, kg2, 1 primary, ..., 6 primary
-  gender: string;     // "male" | "female"
-  score: string;      // Numeric score stored as string
-  createdAt: string;  // ISO date string (auto-generated)
+  name: string; // Student's full name
+  grade: string; // One of: kg1, kg2, 1 primary, ..., 6 primary
+  gender: string; // "male" | "female"
+  score: string; // Numeric score stored as string
+  createdAt: string; // ISO date string (auto-generated)
 }
 ```
 
 ### Grades
 
-| Key          | Label        |
-| ------------ | ------------ |
-| `kg1`        | KG1          |
-| `kg2`        | KG2          |
-| `1 primary`  | 1st Primary  |
-| `2 primary`  | 2nd Primary  |
-| `3 primary`  | 3rd Primary  |
-| `4 primary`  | 4th Primary  |
-| `5 primary`  | 5th Primary  |
-| `6 primary`  | 6th Primary  |
+| Key         | Label       |
+| ----------- | ----------- |
+| `kg1`       | KG1         |
+| `kg2`       | KG2         |
+| `1 primary` | 1st Primary |
+| `2 primary` | 2nd Primary |
+| `3 primary` | 3rd Primary |
+| `4 primary` | 4th Primary |
+| `5 primary` | 5th Primary |
+| `6 primary` | 6th Primary |
 
 ---
 
