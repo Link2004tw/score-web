@@ -1,0 +1,222 @@
+{
+  "E:\\coding\\web-dev\\score-web\\eslint.config.mjs": {
+    "mtime": 1780273337.2963274,
+    "hash": "6c4307ffa009658f5c97f5629094c0c2"
+  },
+  "E:\\coding\\web-dev\\score-web\\next-env.d.ts": {
+    "mtime": 1780317317.2230973,
+    "hash": "2a74d3909800ca5467fa83b0ab4a4890"
+  },
+  "E:\\coding\\web-dev\\score-web\\next.config.ts": {
+    "mtime": 1780315114.7705996,
+    "hash": "f0424803f5e10a51d9fe4fa66ed4ba38"
+  },
+  "E:\\coding\\web-dev\\score-web\\postcss.config.mjs": {
+    "mtime": 1780273337.30284,
+    "hash": "481fac0fdecd70e1821cc30b86030c1a"
+  },
+  "E:\\coding\\web-dev\\score-web\\vitest.config.ts": {
+    "mtime": 1780276878.5978332,
+    "hash": "60e49de01f533f8f7be162987af46b34"
+  },
+  "E:\\coding\\web-dev\\score-web\\app\\error.tsx": {
+    "mtime": 1780315487.9626727,
+    "hash": "f66a7802353d153b0ad911fe72d15a81"
+  },
+  "E:\\coding\\web-dev\\score-web\\app\\layout.tsx": {
+    "mtime": 1780316220.1185694,
+    "hash": "38cca4a2592a4d76016931611d1bedca"
+  },
+  "E:\\coding\\web-dev\\score-web\\app\\loading.tsx": {
+    "mtime": 1780316042.5087638,
+    "hash": "e8eb00916cf1a21258bff61bb05c326d"
+  },
+  "E:\\coding\\web-dev\\score-web\\app\\not-found.tsx": {
+    "mtime": 1780315489.060377,
+    "hash": "cb40c26350c51881fe0c8167a4779687"
+  },
+  "E:\\coding\\web-dev\\score-web\\app\\page.tsx": {
+    "mtime": 1780316528.376885,
+    "hash": "efcc09c525fa74564170b89316122df8"
+  },
+  "E:\\coding\\web-dev\\score-web\\app\\api\\children\\route.ts": {
+    "mtime": 1780316359.4687798,
+    "hash": "00b9aa814ee17c994a662c28aca0ebe4"
+  },
+  "E:\\coding\\web-dev\\score-web\\app\\api\\children\\[id]\\route.ts": {
+    "mtime": 1780316361.9749928,
+    "hash": "387e5a618219b77a37cda054d66b69df"
+  },
+  "E:\\coding\\web-dev\\score-web\\app\\create\\page.tsx": {
+    "mtime": 1780314644.0032492,
+    "hash": "c0b99625e9380b71ed75f174f94e51e1"
+  },
+  "E:\\coding\\web-dev\\score-web\\app\\leaderboard\\page.tsx": {
+    "mtime": 1780316043.3838117,
+    "hash": "3da0b64a398bf71f4fcd5c79ba5cfada"
+  },
+  "E:\\coding\\web-dev\\score-web\\app\\login\\page.tsx": {
+    "mtime": 1780273337.2926576,
+    "hash": "9bd8534a9734787f485c08a1eece398b"
+  },
+  "E:\\coding\\web-dev\\score-web\\app\\score\\page.tsx": {
+    "mtime": 1780316044.615785,
+    "hash": "3b24e85e7f1fd299f441993995f64c9c"
+  },
+  "E:\\coding\\web-dev\\score-web\\app\\score\\__tests__\\ScorePage.test.tsx": {
+    "mtime": 1780315858.8980772,
+    "hash": "e6d70480fed60b640cfdb21ad03140b1"
+  },
+  "E:\\coding\\web-dev\\score-web\\app\\signup\\page.tsx": {
+    "mtime": 1780273337.293175,
+    "hash": "5734420e0aad26120d135ea28900f267"
+  },
+  "E:\\coding\\web-dev\\score-web\\app\\[id]\\page.tsx": {
+    "mtime": 1780316080.0212064,
+    "hash": "9679ef22bc83f00a8c9ae0d031f7b941"
+  },
+  "E:\\coding\\web-dev\\score-web\\app\\[id]\\edit\\page.tsx": {
+    "mtime": 1780316045.8576765,
+    "hash": "2dc81762b7d11d806cbf7738ff387623"
+  },
+  "E:\\coding\\web-dev\\score-web\\components\\ChildForm.tsx": {
+    "mtime": 1780313138.4324691,
+    "hash": "229bbb2e4496d7ad895f72f1523aee03"
+  },
+  "E:\\coding\\web-dev\\score-web\\components\\ConfirmDialog.tsx": {
+    "mtime": 1780316062.8765135,
+    "hash": "ee00bd3388f8a3cfc7608a8b5778f2e8"
+  },
+  "E:\\coding\\web-dev\\score-web\\components\\Navbar.tsx": {
+    "mtime": 1780316020.84874,
+    "hash": "fda786a1264fa8d02277d59d7c2110eb"
+  },
+  "E:\\coding\\web-dev\\score-web\\components\\ProtectedRoute.tsx": {
+    "mtime": 1780316055.5207803,
+    "hash": "1d4176ba62ae5b63414f01ef391e45db"
+  },
+  "E:\\coding\\web-dev\\score-web\\components\\ui\\button.tsx": {
+    "mtime": 1780273337.2942808,
+    "hash": "7ca74150b020a5ef671cf1b43954edf6"
+  },
+  "E:\\coding\\web-dev\\score-web\\components\\ui\\card.tsx": {
+    "mtime": 1780273337.2948015,
+    "hash": "ee74a83be6bb8fc3473cb6cceffe8813"
+  },
+  "E:\\coding\\web-dev\\score-web\\components\\ui\\input.tsx": {
+    "mtime": 1780273337.2948015,
+    "hash": "da33823853390b57ac04230a67657585"
+  },
+  "E:\\coding\\web-dev\\score-web\\components\\ui\\table.tsx": {
+    "mtime": 1780273337.2953234,
+    "hash": "7424f42ca135637e99ac19646cbb6625"
+  },
+  "E:\\coding\\web-dev\\score-web\\lib\\actions.ts": {
+    "mtime": 1780316375.7147624,
+    "hash": "3b5ad5bc5a32639dd5a08f6faf93938e"
+  },
+  "E:\\coding\\web-dev\\score-web\\lib\\admin-store.ts": {
+    "mtime": 1780316366.3331318,
+    "hash": "b92d8901fd4be234a9e3ef7d8bedbab2"
+  },
+  "E:\\coding\\web-dev\\score-web\\lib\\auth-context.tsx": {
+    "mtime": 1780314569.94364,
+    "hash": "d42803b445ec3a07f1cd198addd1010f"
+  },
+  "E:\\coding\\web-dev\\score-web\\lib\\env.ts": {
+    "mtime": 1780317299.8197083,
+    "hash": "fea31a2f57b6a1e869a3bc715bd6c5e5"
+  },
+  "E:\\coding\\web-dev\\score-web\\lib\\filter.ts": {
+    "mtime": 1780315739.118021,
+    "hash": "3b6bea16967a90f143101a8aca38439d"
+  },
+  "E:\\coding\\web-dev\\score-web\\lib\\firebase-admin.ts": {
+    "mtime": 1780315631.8922465,
+    "hash": "24835a52d1d575905c55deed16e9b6ec"
+  },
+  "E:\\coding\\web-dev\\score-web\\lib\\firebase.ts": {
+    "mtime": 1780317301.0209658,
+    "hash": "09cebcf7d1299049c16c28786f814a17"
+  },
+  "E:\\coding\\web-dev\\score-web\\lib\\schemas.ts": {
+    "mtime": 1780315637.2935057,
+    "hash": "2832822157f9e71e9044244f51c6f024"
+  },
+  "E:\\coding\\web-dev\\score-web\\lib\\utils.ts": {
+    "mtime": 1780273337.2993267,
+    "hash": "1d8011eb18769078bf77502b220daa5e"
+  },
+  "E:\\coding\\web-dev\\score-web\\lib\\verify-auth.ts": {
+    "mtime": 1780317467.1669219,
+    "hash": "f4a10a114fe05aef4e4b0fb7006ed297"
+  },
+  "E:\\coding\\web-dev\\score-web\\lib\\__tests__\\filter.test.ts": {
+    "mtime": 1780276697.4182012,
+    "hash": "5a6a4fdca406a300d8cbd2622da88d09"
+  },
+  "E:\\coding\\web-dev\\score-web\\test\\setup.ts": {
+    "mtime": 1780276566.4978151,
+    "hash": "3709e3aa95abf0544678f0f2d9b46702"
+  },
+  "E:\\coding\\web-dev\\score-web\\AGENTS.md": {
+    "mtime": 1780273337.2884736,
+    "hash": "9346a4897ff955555ddedb7bebf77adb"
+  },
+  "E:\\coding\\web-dev\\score-web\\CLAUDE.md": {
+    "mtime": 1780273337.2884736,
+    "hash": "771faa62feb60b7de901a397aebb29b0"
+  },
+  "E:\\coding\\web-dev\\score-web\\description.md": {
+    "mtime": 1780273337.2953234,
+    "hash": "3e586f522c96267fed4a841bc0041a00"
+  },
+  "E:\\coding\\web-dev\\score-web\\README.md": {
+    "mtime": 1780273387.2578871,
+    "hash": "09ed976a9e0ca0b918db8b2ff82225f5"
+  },
+  "E:\\coding\\web-dev\\score-web\\task.md": {
+    "mtime": 1780277502.2729363,
+    "hash": "ef1d5d3ed8d78339b41b7cb10b5a7940"
+  },
+  "E:\\coding\\web-dev\\score-web\\tasks.md": {
+    "mtime": 1780316604.2647505,
+    "hash": "7e312e9351295f90438a5736e0242b6f"
+  },
+  "E:\\coding\\web-dev\\score-web\\docs\\api.md": {
+    "mtime": 1780273337.2953234,
+    "hash": "a024e34f7b79b64da962dfde80108c32"
+  },
+  "E:\\coding\\web-dev\\score-web\\docs\\architecture.md": {
+    "mtime": 1780273337.2953234,
+    "hash": "ce5c784b7b706f26c5aa2cc6e8c31282"
+  },
+  "E:\\coding\\web-dev\\score-web\\docs\\guide.md": {
+    "mtime": 1780273337.2953234,
+    "hash": "da55b23793818eb272a7bad692bde7d9"
+  },
+  "E:\\coding\\web-dev\\score-web\\docs\\setup.md": {
+    "mtime": 1780273458.032724,
+    "hash": "d54676fef5310f4c8cace203166d2f59"
+  },
+  "E:\\coding\\web-dev\\score-web\\public\\file.svg": {
+    "mtime": 1780273337.3038385,
+    "hash": "d09f95206c3fa0bb9bd9fefabfd0ea71"
+  },
+  "E:\\coding\\web-dev\\score-web\\public\\globe.svg": {
+    "mtime": 1780273337.3038385,
+    "hash": "2aaafa6a49b6563925fe440891e32717"
+  },
+  "E:\\coding\\web-dev\\score-web\\public\\next.svg": {
+    "mtime": 1780273337.3038385,
+    "hash": "8e061864f388b47f33a1c3780831193e"
+  },
+  "E:\\coding\\web-dev\\score-web\\public\\vercel.svg": {
+    "mtime": 1780273337.3038385,
+    "hash": "c0af2f507b369b085b35ef4bbe3bcf1e"
+  },
+  "E:\\coding\\web-dev\\score-web\\public\\window.svg": {
+    "mtime": 1780273337.3048394,
+    "hash": "a2760511c65806022ad20adf74370ff3"
+  }
+}

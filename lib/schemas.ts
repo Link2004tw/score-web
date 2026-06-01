@@ -19,3 +19,8 @@ export const childSchema = z.object({
 });
 
 export type Child = z.infer<typeof childSchema>;
+
+export interface StoredChild extends Child {
+  id: string;
+  createdAt: string;
+}

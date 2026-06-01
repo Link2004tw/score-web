@@ -10,7 +10,7 @@ import { Navbar } from "@/components/Navbar";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { updateChildAction } from "@/lib/actions";
 import type { Child } from "@/lib/schemas";
-import type { StoredChild } from "@/lib/store";
+import type { StoredChild } from "@/lib/schemas";
 
 export default function EditPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -22,6 +22,7 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
   useEffect(() => {
     fetch(`/api/children/${id}`)
       .then((res) => {
+        if (res.status === 401) throw new Error("Unauthorized");
         if (!res.ok) throw new Error("Not found");
         return res.json();
       })
@@ -29,19 +30,24 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
         setChild(data);
         setLoading(false);
       })
-      .catch(() => {
+      .catch((e) => {
+        if (e.message === "Unauthorized") router.push("/login");
         setNotFound(true);
         setLoading(false);
       });
-  }, [id]);
+  }, [id, router]);
 
   const handleSubmit = async (data: Child) => {
     if (!child) return;
-    await updateChildAction(child.id, data);
-    router.push(`/${child.id}`);
+    try {
+      await updateChildAction(child.id, data);
+      router.push(`/${child.id}`);
+    } catch {
+      router.push("/login");
+    }
   };
 
-  if (loading) return <p className="text-center py-8 text-muted-foreground">Loading...</p>;
+  if (loading) return <p className="text-center py-8 text-muted-foreground" role="status" aria-live="polite">Loading...</p>;
 
   if (notFound) {
     return (

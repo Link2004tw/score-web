@@ -1,0 +1,1028 @@
+{
+  "nodes": [
+    {
+      "id": "score_web",
+      "label": "Score Web Application",
+      "file_type": "rationale",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agents_md",
+      "label": "AGENTS.md - Next.js Agent Rules",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "claude_md",
+      "label": "CLAUDE.md - Project Instructions",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "description_md",
+      "label": "Project Description",
+      "file_type": "document",
+      "source_file": "description.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "readme_md",
+      "label": "README - Project Overview",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "task_md",
+      "label": "Master Task List",
+      "file_type": "document",
+      "source_file": "task.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "tasks_md",
+      "label": "Test Task Tracker",
+      "file_type": "document",
+      "source_file": "tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "doc_api",
+      "label": "API Reference Documentation",
+      "file_type": "document",
+      "source_file": "docs/api.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "doc_architecture",
+      "label": "Architecture Documentation",
+      "file_type": "document",
+      "source_file": "docs/architecture.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "doc_guide",
+      "label": "User Guide for Teachers",
+      "file_type": "document",
+      "source_file": "docs/guide.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "doc_setup",
+      "label": "Setup Guide",
+      "file_type": "document",
+      "source_file": "docs/setup.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "teacher_first_design",
+      "label": "Teacher-First Design Principle",
+      "file_type": "rationale",
+      "source_file": "description.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "mobile_first",
+      "label": "Mobile-First Design",
+      "file_type": "rationale",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "server_actions_vs_api",
+      "label": "Server Actions vs API Routes Pattern",
+      "file_type": "rationale",
+      "source_file": "docs/architecture.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "auth_system",
+      "label": "Authentication System",
+      "file_type": "rationale",
+      "source_file": "docs/architecture.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "teacher_workflow",
+      "label": "Teacher Workflow",
+      "file_type": "rationale",
+      "source_file": "docs/guide.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "task_tracking_system",
+      "label": "Task Tracking System",
+      "file_type": "rationale",
+      "source_file": "task.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "security_hardening",
+      "label": "Security Hardening Tasks",
+      "file_type": "rationale",
+      "source_file": "task.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "testing_strategy",
+      "label": "Testing Strategy",
+      "file_type": "rationale",
+      "source_file": "tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "deployment_pipeline",
+      "label": "Deployment Pipeline",
+      "file_type": "rationale",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "seo_pwa",
+      "label": "SEO and PWA Support",
+      "file_type": "rationale",
+      "source_file": "task.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "observability",
+      "label": "Observability and Operations",
+      "file_type": "rationale",
+      "source_file": "task.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "nextjs_16",
+      "label": "Next.js 16 with App Router",
+      "file_type": "code",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "firebase_auth",
+      "label": "Firebase Authentication",
+      "file_type": "code",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "firestore",
+      "label": "Cloud Firestore",
+      "file_type": "code",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "typescript",
+      "label": "TypeScript",
+      "file_type": "code",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "tailwind_css",
+      "label": "Tailwind CSS v4",
+      "file_type": "code",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "shadcn_ui",
+      "label": "shadcn/ui Component Library",
+      "file_type": "code",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "react_hook_form",
+      "label": "react-hook-form",
+      "file_type": "code",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "zod",
+      "label": "Zod Validation",
+      "file_type": "code",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "child_schema",
+      "label": "Child Data Schema",
+      "file_type": "code",
+      "source_file": "docs/api.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "api_routes",
+      "label": "API Routes for reads",
+      "file_type": "code",
+      "source_file": "docs/api.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "server_actions",
+      "label": "Server Actions for mutations",
+      "file_type": "code",
+      "source_file": "docs/api.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "vercel",
+      "label": "Vercel Deployment",
+      "file_type": "code",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "github_actions",
+      "label": "GitHub Actions CI/CD",
+      "file_type": "code",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "firebase_config",
+      "label": "Firebase Configuration",
+      "file_type": "code",
+      "source_file": "docs/setup.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "firestore_rules",
+      "label": "Firestore Security Rules",
+      "file_type": "code",
+      "source_file": "docs/setup.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "env_vars",
+      "label": "Environment Variables",
+      "file_type": "code",
+      "source_file": "docs/setup.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "nextjs_agent_rules",
+      "label": "Next.js Agent Rules Warning",
+      "file_type": "rationale",
+      "source_file": "AGENTS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "svg_file",
+      "label": "file.svg Logo",
+      "file_type": "image",
+      "source_file": "public/file.svg",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "svg_globe",
+      "label": "globe.svg Logo",
+      "file_type": "image",
+      "source_file": "public/globe.svg",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "svg_next",
+      "label": "next.svg Logo",
+      "file_type": "image",
+      "source_file": "public/next.svg",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "svg_vercel",
+      "label": "vercel.svg Logo",
+      "file_type": "image",
+      "source_file": "public/vercel.svg",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "svg_window",
+      "label": "window.svg Logo",
+      "file_type": "image",
+      "source_file": "public/window.svg",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "score_web",
+      "target": "nextjs_16",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "score_web",
+      "target": "firebase_auth",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "score_web",
+      "target": "firestore",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "score_web",
+      "target": "typescript",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "score_web",
+      "target": "teacher_first_design",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "description.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "score_web",
+      "target": "mobile_first",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "claude_md",
+      "target": "agents_md",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_md",
+      "target": "doc_architecture",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_md",
+      "target": "doc_setup",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_md",
+      "target": "doc_api",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_md",
+      "target": "doc_guide",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "doc_architecture",
+      "target": "server_actions_vs_api",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "doc_architecture",
+      "target": "auth_system",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "doc_api",
+      "target": "api_routes",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/api.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "doc_api",
+      "target": "server_actions",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/api.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "doc_api",
+      "target": "child_schema",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/api.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "doc_guide",
+      "target": "teacher_workflow",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/guide.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "doc_setup",
+      "target": "firebase_config",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/setup.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "doc_setup",
+      "target": "firestore_rules",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/setup.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "doc_setup",
+      "target": "env_vars",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/setup.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "task_md",
+      "target": "security_hardening",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "task.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "task_md",
+      "target": "deployment_pipeline",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "task.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "task_md",
+      "target": "testing_strategy",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "task.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "task_md",
+      "target": "seo_pwa",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "task.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "task_md",
+      "target": "observability",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "task.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "tasks_md",
+      "target": "testing_strategy",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tasks.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agents_md",
+      "target": "nextjs_agent_rules",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "AGENTS.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "server_actions_vs_api",
+      "target": "server_actions",
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/architecture.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "server_actions_vs_api",
+      "target": "api_routes",
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/architecture.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "auth_system",
+      "target": "firebase_auth",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "server_actions",
+      "target": "firestore",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/api.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "api_routes",
+      "target": "firestore",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/api.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "child_schema",
+      "target": "zod",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/api.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "teacher_workflow",
+      "target": "auth_system",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/guide.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "teacher_first_design",
+      "target": "teacher_workflow",
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/guide.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "mobile_first",
+      "target": "tailwind_css",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "deployment_pipeline",
+      "target": "vercel",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "deployment_pipeline",
+      "target": "github_actions",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "security_hardening",
+      "target": "firestore_rules",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "task.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "nextjs_agent_rules",
+      "target": "nextjs_16",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "AGENTS.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "task_tracking_system",
+      "target": "task_md",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "task.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "task_tracking_system",
+      "target": "tasks_md",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tasks.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "firebase_config",
+      "target": "firebase_auth",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/setup.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "firebase_config",
+      "target": "firestore",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/setup.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "env_vars",
+      "target": "vercel",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/setup.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "svg_next",
+      "target": "nextjs_16",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "public/next.svg",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "svg_vercel",
+      "target": "vercel",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "public/vercel.svg",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "shadcn_ui",
+      "target": "tailwind_css",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "react_hook_form",
+      "target": "zod",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "firebase_stack",
+      "label": "Firebase Backend Stack",
+      "nodes": [
+        "firebase_auth",
+        "firestore",
+        "firebase_config",
+        "firestore_rules"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.95,
+      "source_file": "README.md"
+    },
+    {
+      "id": "doc_system",
+      "label": "Documentation System",
+      "nodes": [
+        "readme_md",
+        "doc_api",
+        "doc_architecture",
+        "doc_guide",
+        "doc_setup"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md"
+    },
+    {
+      "id": "task_management",
+      "label": "Task and Project Management",
+      "nodes": [
+        "task_md",
+        "tasks_md",
+        "task_tracking_system",
+        "security_hardening",
+        "testing_strategy"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "task.md"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

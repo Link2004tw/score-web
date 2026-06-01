@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { filterStudents } from "../filter";
-import type { StoredChild } from "../store";
+import type { StoredChild } from "../schemas";
 
 const students: StoredChild[] = [
   {

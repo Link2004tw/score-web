@@ -144,3 +144,9 @@
 .animate-score-bump {
   animation: score-bump 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-score-bump {
+    animation: none;
+  }
+}

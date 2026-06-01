@@ -15,7 +15,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }, [user, loading, router]);
 
   if (loading) {
-    return <p className="text-center py-8 text-muted-foreground">Loading...</p>;
+    return <p className="text-center py-8 text-muted-foreground" role="status" aria-live="polite">Loading...</p>;
   }
 
   if (!user) {

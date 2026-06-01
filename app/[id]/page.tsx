@@ -8,7 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Navbar } from "@/components/Navbar";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { deleteChildAction } from "@/lib/actions";
-import type { StoredChild } from "@/lib/store";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
+import type { StoredChild } from "@/lib/schemas";
 
 export default function ChildPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -16,10 +17,12 @@ export default function ChildPage({ params }: { params: Promise<{ id: string }> 
   const [child, setChild] = useState<StoredChild | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
     fetch(`/api/children/${id}`)
       .then((res) => {
+        if (res.status === 401) throw new Error("Unauthorized");
         if (!res.ok) throw new Error("Not found");
         return res.json();
       })
@@ -27,20 +30,30 @@ export default function ChildPage({ params }: { params: Promise<{ id: string }> 
         setChild(data);
         setLoading(false);
       })
-      .catch(() => {
+      .catch((e) => {
+        if (e.message === "Unauthorized") router.push("/login");
         setNotFound(true);
         setLoading(false);
       });
-  }, [id]);
+  }, [id, router]);
 
   const handleDelete = async () => {
     if (!child) return;
-    if (!confirm(`Delete ${child.name}? This cannot be undone.`)) return;
-    await deleteChildAction(child.id);
-    router.push("/leaderboard");
+    setShowDeleteConfirm(true);
   };
 
-  if (loading) return <p className="text-center py-8 text-muted-foreground">Loading...</p>;
+  const confirmDelete = async () => {
+    if (!child) return;
+    setShowDeleteConfirm(false);
+    try {
+      await deleteChildAction(child.id);
+      router.push("/leaderboard");
+    } catch {
+      router.push("/login");
+    }
+  };
+
+  if (loading) return <p className="text-center py-8 text-muted-foreground" role="status" aria-live="polite">Loading...</p>;
 
   if (notFound) {
     return (
@@ -112,6 +125,13 @@ export default function ChildPage({ params }: { params: Promise<{ id: string }> 
           </Card>
         </div>
       </div>
+      <ConfirmDialog
+        open={showDeleteConfirm}
+        title="Delete student"
+        message={child ? `Delete ${child.name}? This cannot be undone.` : ""}
+        onConfirm={confirmDelete}
+        onCancel={() => setShowDeleteConfirm(false)}
+      />
     </ProtectedRoute>
   );
 }

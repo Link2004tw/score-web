@@ -14,6 +14,12 @@ vi.mock("@/lib/actions", () => ({
 
 import { adjustScoreAction } from "@/lib/actions";
 
+// Mock useRouter
+const mockPush = vi.fn();
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: mockPush }),
+}));
+
 // Mock Navbar
 vi.mock("@/components/Navbar", () => ({
   Navbar: () => <nav data-testid="navbar">Navbar</nav>,

@@ -1,4 +1,4 @@
-import type { StoredChild } from "./store";
+import type { StoredChild } from "./schemas";
 
 export interface Filters {
   search?: string;

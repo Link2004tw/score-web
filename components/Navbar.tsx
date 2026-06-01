@@ -17,7 +17,7 @@ export function Navbar() {
   };
 
   return (
-    <nav className="border-b bg-background">
+    <nav className="border-b bg-background" aria-label="Main navigation">
       <div className="mx-auto flex h-14 max-w-2xl items-center justify-between px-4 md:px-8">
         <Link href="/" className="text-lg font-bold tracking-tight">
           Scoreboard

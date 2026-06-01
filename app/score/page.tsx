@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,9 +10,10 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { adjustScoreAction } from "@/lib/actions";
 import { gradeValues } from "@/lib/schemas";
 import { filterStudents } from "@/lib/filter";
-import type { StoredChild } from "@/lib/store";
+import type { StoredChild } from "@/lib/schemas";
 
 export default function ScorePage() {
+  const router = useRouter();
   const [children, setChildren] = useState<StoredChild[]>([]);
   const [search, setSearch] = useState("");
   const [genderFilter, setGenderFilter] = useState<string>("");
@@ -31,6 +33,7 @@ export default function ScorePage() {
   useEffect(() => {
     fetch("/api/children")
       .then((res) => {
+        if (res.status === 401) throw new Error("Unauthorized");
         if (!res.ok) throw new Error("Failed to fetch");
         return res.json();
       })
@@ -38,12 +41,13 @@ export default function ScorePage() {
         setChildren(data);
         setLoading(false);
       })
-      .catch(() => {
+      .catch((e) => {
         setChildren([]);
-        setError("Failed to load students.");
+        setError(e.message === "Unauthorized" ? "Session expired. Please log in again." : "Failed to load students.");
         setLoading(false);
+        if (e.message === "Unauthorized") router.push("/login");
       });
-  }, []);
+  }, [router]);
 
   const filtered = useMemo(
     () => filterStudents(children, { search, gender: genderFilter, grade: gradeFilter }),
@@ -51,12 +55,10 @@ export default function ScorePage() {
   );
 
   const handleAdjust = async (id: string, delta: number) => {
-    console.log("handleAdjust called with:", { id, delta });
     setError(null);
     setUpdating(id);
     try {
       const result = await adjustScoreAction(id, delta);
-      console.log("adjustScoreAction result:", result);
       if ("error" in result) {
         setError(result.error);
       } else {
@@ -68,13 +70,12 @@ export default function ScorePage() {
         setScoreChanged({ id, delta });
       }
     } catch (e) {
-      console.error("adjustScoreAction threw:", e);
       setError(e instanceof Error ? e.message : "Something went wrong");
     }
     setUpdating(null);
   };
 
-  if (loading) return <p className="text-center py-8 text-muted-foreground">Loading...</p>;
+  if (loading) return <p className="text-center py-8 text-muted-foreground" role="status" aria-live="polite">Loading...</p>;
 
   const selectClass =
     "h-10 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
@@ -121,7 +122,7 @@ export default function ScorePage() {
           </div>
 
           {error && (
-            <p className="text-sm text-destructive text-center py-2">{error}</p>
+            <p className="text-sm text-destructive text-center py-2" role="alert">{error}</p>
           )}
 
           <div className="space-y-2">
@@ -145,11 +146,13 @@ export default function ScorePage() {
                     <div className="flex items-center gap-3">
                       <span
                         className={`text-lg font-semibold w-10 text-right tabular-nums transition-all duration-300 ${
-                          scoreChanged?.id === child.id
-                            ? scoreChanged.delta > 0
+                          (() => {
+                            const changed = scoreChanged;
+                            if (changed === null || changed.id !== child.id) return "";
+                            return changed.delta > 0
                               ? "animate-score-bump text-primary"
-                              : "animate-score-bump text-destructive"
-                            : ""
+                              : "animate-score-bump text-destructive";
+                          })()
                         }`}
                       >
                         {child.score}

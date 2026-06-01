@@ -11,7 +11,7 @@ type ChildFormValues = {
   name: string;
   grade: string;
   gender: string;
-  score: number;
+  score: number | undefined;
 };
 
 interface ChildFormProps {
@@ -32,7 +32,7 @@ export function ChildForm({ onSubmit, defaultValues, submitLabel = "Submit" }: C
       name: defaultValues?.name ?? "",
       grade: defaultValues?.grade ?? "",
       gender: defaultValues?.gender ?? "",
-      score: defaultValues?.score ?? "",
+      score: defaultValues?.score ?? undefined,
     },
   });
 
@@ -42,7 +42,7 @@ export function ChildForm({ onSubmit, defaultValues, submitLabel = "Submit" }: C
         name: defaultValues.name ?? "",
         grade: defaultValues.grade ?? "",
         gender: defaultValues.gender ?? "",
-        score: defaultValues.score ?? "",
+        score: defaultValues.score ?? undefined,
       });
     }
   }, [defaultValues, reset]);

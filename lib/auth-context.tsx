@@ -39,6 +39,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    if (!user) {
+      document.cookie = "fb_token=; path=/; max-age=0; SameSite=Lax";
+      return;
+    }
+
+    const updateToken = async () => {
+      const token = await user.getIdToken();
+      document.cookie = `fb_token=${token}; path=/; max-age=3600; SameSite=Lax`;
+    };
+
+    updateToken();
+    const interval = setInterval(updateToken, 55 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [user]);
+
   const signUp = async (email: string, password: string, displayName: string) => {
     const { user } = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(user, { displayName });

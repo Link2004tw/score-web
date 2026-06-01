@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,9 +18,10 @@ import { Navbar } from "@/components/Navbar";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { gradeValues } from "@/lib/schemas";
 import { filterStudents } from "@/lib/filter";
-import type { StoredChild } from "@/lib/store";
+import type { StoredChild } from "@/lib/schemas";
 
 export default function LeaderboardPage() {
+  const router = useRouter();
   const [children, setChildren] = useState<StoredChild[]>([]);
   const [search, setSearch] = useState("");
   const [genderFilter, setGenderFilter] = useState<string>("");
@@ -30,6 +32,7 @@ export default function LeaderboardPage() {
   useEffect(() => {
     fetch("/api/children")
       .then((res) => {
+        if (res.status === 401) throw new Error("Unauthorized");
         if (!res.ok) throw new Error("Failed to fetch");
         return res.json();
       })
@@ -37,20 +40,21 @@ export default function LeaderboardPage() {
         setChildren(data);
         setLoading(false);
       })
-      .catch(() => {
+      .catch((e) => {
         setChildren([]);
         setError(true);
         setLoading(false);
+        if (e.message === "Unauthorized") router.push("/login");
       });
-  }, []);
+  }, [router]);
 
   const filtered = useMemo(
     () => filterStudents(children, { search, gender: genderFilter, grade: gradeFilter }),
     [children, search, genderFilter, gradeFilter]
   );
 
-  if (loading) return <p className="text-center py-8 text-muted-foreground">Loading...</p>;
-  if (error) return <p className="text-center py-8 text-destructive">Failed to load students.</p>;
+  if (loading) return <p className="text-center py-8 text-muted-foreground" role="status" aria-live="polite">Loading...</p>;
+  if (error) return <p className="text-center py-8 text-destructive" role="alert">Failed to load students.</p>;
 
   const selectClass =
     "h-10 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";

@@ -16,8 +16,12 @@ export default function CreatePage() {
 
   const handleSubmit = async (data: Child) => {
     setLoading(true);
-    const newChild = await addChildAction(data);
-    router.push(`/${newChild.id}`);
+    try {
+      const newChild = await addChildAction(data);
+      router.push(`/${newChild.id}`);
+    } catch {
+      router.push("/login");
+    }
   };
 
   return (
