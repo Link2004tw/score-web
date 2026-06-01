@@ -19,6 +19,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { gradeValues } from "@/lib/schemas";
 import { filterStudents } from "@/lib/filter";
 import type { StoredChild } from "@/lib/schemas";
+import { getChildColor, colorDot } from "@/lib/color";
 
 export default function LeaderboardPage() {
   const router = useRouter();
@@ -50,11 +51,21 @@ export default function LeaderboardPage() {
 
   const filtered = useMemo(
     () => filterStudents(children, { search, gender: genderFilter, grade: gradeFilter }),
-    [children, search, genderFilter, gradeFilter]
+    [children, search, genderFilter, gradeFilter],
   );
 
-  if (loading) return <p className="text-center py-8 text-muted-foreground" role="status" aria-live="polite">Loading...</p>;
-  if (error) return <p className="text-center py-8 text-destructive" role="alert">Failed to load students.</p>;
+  if (loading)
+    return (
+      <p className="text-center py-8 text-muted-foreground" role="status" aria-live="polite">
+        Loading...
+      </p>
+    );
+  if (error)
+    return (
+      <p className="text-center py-8 text-destructive" role="alert">
+        Failed to load students.
+      </p>
+    );
 
   const selectClass =
     "h-10 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
@@ -72,15 +83,25 @@ export default function LeaderboardPage() {
               className="h-12 text-base"
             />
             <div className="flex gap-4">
-              <select value={genderFilter} onChange={(e) => setGenderFilter(e.target.value)} className={selectClass}>
+              <select
+                value={genderFilter}
+                onChange={(e) => setGenderFilter(e.target.value)}
+                className={selectClass}
+              >
                 <option value="">All Genders</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
               </select>
-              <select value={gradeFilter} onChange={(e) => setGradeFilter(e.target.value)} className={selectClass}>
+              <select
+                value={gradeFilter}
+                onChange={(e) => setGradeFilter(e.target.value)}
+                className={selectClass}
+              >
                 <option value="">All Grades</option>
                 {gradeValues.map((g) => (
-                  <option key={g} value={g}>{g}</option>
+                  <option key={g} value={g}>
+                    {g}
+                  </option>
                 ))}
               </select>
             </div>
@@ -116,13 +137,16 @@ export default function LeaderboardPage() {
                             {i + 1}
                           </TableCell>
                           <TableCell className="font-medium">
-                            <Link href={`/${child.id}`}>{child.name}</Link>
+                            <Link href={`/${child.id}`} className="inline-flex items-center gap-2">
+                              <span
+                                className={`inline-block size-2.5 rounded-full ${colorDot(getChildColor(child.grade, child.gender))}`}
+                              />
+                              {child.name}
+                            </Link>
                           </TableCell>
                           <TableCell>{child.grade}</TableCell>
                           <TableCell className="capitalize">{child.gender}</TableCell>
-                          <TableCell className="text-right font-semibold">
-                            {child.score}
-                          </TableCell>
+                          <TableCell className="text-right font-semibold">{child.score}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>

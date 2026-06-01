@@ -11,6 +11,7 @@ import { adjustScoreAction } from "@/lib/actions";
 import { gradeValues } from "@/lib/schemas";
 import { filterStudents } from "@/lib/filter";
 import type { StoredChild } from "@/lib/schemas";
+import { getChildColor, colorDot } from "@/lib/color";
 
 export default function ScorePage() {
   const router = useRouter();
@@ -43,7 +44,11 @@ export default function ScorePage() {
       })
       .catch((e) => {
         setChildren([]);
-        setError(e.message === "Unauthorized" ? "Session expired. Please log in again." : "Failed to load students.");
+        setError(
+          e.message === "Unauthorized"
+            ? "Session expired. Please log in again."
+            : "Failed to load students.",
+        );
         setLoading(false);
         if (e.message === "Unauthorized") router.push("/login");
       });
@@ -51,7 +56,7 @@ export default function ScorePage() {
 
   const filtered = useMemo(
     () => filterStudents(children, { search, gender: genderFilter, grade: gradeFilter }),
-    [children, search, genderFilter, gradeFilter]
+    [children, search, genderFilter, gradeFilter],
   );
 
   const handleAdjust = async (id: string, delta: number) => {
@@ -62,11 +67,7 @@ export default function ScorePage() {
       if ("error" in result) {
         setError(result.error);
       } else {
-        setChildren((prev) =>
-          prev.map((c) =>
-            c.id === id ? { ...c, score: result.score } : c
-          )
-        );
+        setChildren((prev) => prev.map((c) => (c.id === id ? { ...c, score: result.score } : c)));
         setScoreChanged({ id, delta });
       }
     } catch (e) {
@@ -75,7 +76,12 @@ export default function ScorePage() {
     setUpdating(null);
   };
 
-  if (loading) return <p className="text-center py-8 text-muted-foreground" role="status" aria-live="polite">Loading...</p>;
+  if (loading)
+    return (
+      <p className="text-center py-8 text-muted-foreground" role="status" aria-live="polite">
+        Loading...
+      </p>
+    );
 
   const selectClass =
     "h-10 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
@@ -108,36 +114,51 @@ export default function ScorePage() {
           />
 
           <div className="flex gap-4">
-            <select value={genderFilter} onChange={(e) => setGenderFilter(e.target.value)} className={selectClass}>
+            <select
+              value={genderFilter}
+              onChange={(e) => setGenderFilter(e.target.value)}
+              className={selectClass}
+            >
               <option value="">All Genders</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
             </select>
-            <select value={gradeFilter} onChange={(e) => setGradeFilter(e.target.value)} className={selectClass}>
+            <select
+              value={gradeFilter}
+              onChange={(e) => setGradeFilter(e.target.value)}
+              className={selectClass}
+            >
               <option value="">All Grades</option>
               {gradeValues.map((g) => (
-                <option key={g} value={g}>{g}</option>
+                <option key={g} value={g}>
+                  {g}
+                </option>
               ))}
             </select>
           </div>
 
           {error && (
-            <p className="text-sm text-destructive text-center py-2" role="alert">{error}</p>
+            <p className="text-sm text-destructive text-center py-2" role="alert">
+              {error}
+            </p>
           )}
 
           <div className="space-y-2">
             {filtered.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-8">
-                {children.length === 0
-                  ? "No students yet."
-                  : "No students match your filters."}
+                {children.length === 0 ? "No students yet." : "No students match your filters."}
               </p>
             ) : (
               filtered.map((child) => (
                 <Card key={child.id}>
                   <CardContent className="flex items-center justify-between py-3">
                     <div className="min-w-0 flex-1">
-                      <p className="font-medium truncate">{child.name}</p>
+                      <p className="font-medium truncate inline-flex items-center gap-2">
+                        <span
+                          className={`inline-block size-2.5 rounded-full ${colorDot(getChildColor(child.grade, child.gender))}`}
+                        />
+                        {child.name}
+                      </p>
                       <p className="text-xs text-muted-foreground">
                         {child.grade} &middot; {child.gender}
                       </p>
@@ -145,15 +166,13 @@ export default function ScorePage() {
 
                     <div className="flex items-center gap-3">
                       <span
-                        className={`text-lg font-semibold w-10 text-right tabular-nums transition-all duration-300 ${
-                          (() => {
-                            const changed = scoreChanged;
-                            if (changed === null || changed.id !== child.id) return "";
-                            return changed.delta > 0
-                              ? "animate-score-bump text-primary"
-                              : "animate-score-bump text-destructive";
-                          })()
-                        }`}
+                        className={`text-lg font-semibold w-10 text-right tabular-nums transition-all duration-300 ${(() => {
+                          const changed = scoreChanged;
+                          if (changed === null || changed.id !== child.id) return "";
+                          return changed.delta > 0
+                            ? "animate-score-bump text-primary"
+                            : "animate-score-bump text-destructive";
+                        })()}`}
                       >
                         {child.score}
                       </span>

@@ -10,6 +10,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { deleteChildAction } from "@/lib/actions";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import type { StoredChild } from "@/lib/schemas";
+import { getChildColor, colorDot } from "@/lib/color";
 
 export default function ChildPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -53,7 +54,12 @@ export default function ChildPage({ params }: { params: Promise<{ id: string }> 
     }
   };
 
-  if (loading) return <p className="text-center py-8 text-muted-foreground" role="status" aria-live="polite">Loading...</p>;
+  if (loading)
+    return (
+      <p className="text-center py-8 text-muted-foreground" role="status" aria-live="polite">
+        Loading...
+      </p>
+    );
 
   if (notFound) {
     return (
@@ -77,14 +83,24 @@ export default function ChildPage({ params }: { params: Promise<{ id: string }> 
       <Navbar />
       <div className="bg-background p-4 md:p-8">
         <div className="mx-auto max-w-2xl space-y-6">
-          <Link href="/leaderboard" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+          <Link
+            href="/leaderboard"
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+          >
             &larr; Back to Leaderboard
           </Link>
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold tracking-tight">{child.name}</h1>
+            <h1 className="text-2xl font-bold tracking-tight inline-flex items-center gap-2">
+              <span
+                className={`inline-block size-3 rounded-full ${colorDot(getChildColor(child.grade, child.gender))}`}
+              />
+              {child.name}
+            </h1>
             <div className="flex gap-2">
               <Link href={`/${child.id}/edit`}>
-                <Button variant="outline" size="sm">Edit</Button>
+                <Button variant="outline" size="sm">
+                  Edit
+                </Button>
               </Link>
               <Button variant="destructive" size="sm" onClick={handleDelete}>
                 Delete
