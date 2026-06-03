@@ -4,7 +4,13 @@ import type { NextRequest } from "next/server";
 const TOKEN_COOKIE = "fb_token";
 
 const staticRoutes = new Set(["/", "/login", "/signup", "/api-docs"]);
-const namedProtectedRoutes = new Set(["/leaderboard", "/score", "/create"]);
+const namedProtectedRoutes = new Set([
+  "/leaderboard",
+  "/score",
+  "/create",
+  "/attendance",
+  "/attendance/history",
+]);
 
 function isProtected(pathname: string): boolean {
   if (namedProtectedRoutes.has(pathname)) return true;

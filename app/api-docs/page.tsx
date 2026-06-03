@@ -19,7 +19,7 @@ export default function ApiDocsPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-dvh">
       <SwaggerUI url="/api/docs" />
     </div>
   );

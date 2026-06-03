@@ -59,10 +59,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signUp = async (email: string, password: string, displayName: string) => {
     const { user } = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(user, { displayName });
+    const token = await user.getIdToken();
+    document.cookie = `fb_token=${token}; path=/; max-age=3600; SameSite=Lax`;
   };
 
   const login = async (email: string, password: string) => {
-    await signInWithEmailAndPassword(auth, email, password);
+    const { user } = await signInWithEmailAndPassword(auth, email, password);
+    const token = await user.getIdToken();
+    document.cookie = `fb_token=${token}; path=/; max-age=3600; SameSite=Lax`;
   };
 
   const logout = async () => {

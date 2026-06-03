@@ -20,6 +20,7 @@ import { gradeValues } from "@/lib/schemas";
 import { filterStudents } from "@/lib/filter";
 import type { StoredChild } from "@/lib/schemas";
 import { getChildColor, colorDot } from "@/lib/color";
+import { getTotalWednesdaysSince } from "@/lib/attendance-utils";
 
 interface PageData {
   children: StoredChild[];
@@ -121,12 +122,12 @@ export default function LeaderboardPage() {
   }
 
   const selectClass =
-    "h-10 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+    "max-sm:h-11 h-10 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
 
   return (
     <ProtectedRoute>
       <Navbar />
-      <div className="bg-background p-4 md:p-8">
+      <div className="bg-background p-4 pb-20 md:p-8 md:pb-8">
         <div className="mx-auto max-w-2xl space-y-4">
           <div className="flex flex-col gap-4">
             <Input
@@ -135,7 +136,7 @@ export default function LeaderboardPage() {
               onChange={(e) => setSearch(e.target.value)}
               className="h-12 text-base"
             />
-            <div className="flex gap-4">
+            <div className="flex gap-4 max-sm:flex-col max-sm:gap-2">
               <select
                 value={genderFilter}
                 onChange={(e) => setGenderFilter(e.target.value)}
@@ -181,6 +182,8 @@ export default function LeaderboardPage() {
                         <TableHead>Grade</TableHead>
                         <TableHead>Gender</TableHead>
                         <TableHead className="text-right">Score</TableHead>
+                        <TableHead className="text-right">Norm</TableHead>
+                        <TableHead className="text-right">Choir</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -200,6 +203,34 @@ export default function LeaderboardPage() {
                           <TableCell>{child.grade}</TableCell>
                           <TableCell className="capitalize">{child.gender}</TableCell>
                           <TableCell className="text-right font-semibold">{child.score}</TableCell>
+                          <TableCell className="text-right text-sm tabular-nums">
+                            {child.normalAttendance}
+                            <span className="text-muted-foreground text-xs ml-0.5">
+                              {Math.round(
+                                (child.normalAttendance /
+                                  getTotalWednesdaysSince(child.createdAt)) *
+                                  100,
+                              )}
+                              %
+                            </span>
+                          </TableCell>
+                          <TableCell className="text-right text-sm tabular-nums">
+                            {child.choirStatus === "out" ? (
+                              <span className="text-destructive font-semibold text-xs">OUT</span>
+                            ) : (
+                              <>
+                                {child.choirAttendance}
+                                <span className="text-muted-foreground text-xs ml-0.5">
+                                  {Math.round(
+                                    (child.choirAttendance /
+                                      getTotalWednesdaysSince(child.createdAt)) *
+                                      100,
+                                  )}
+                                  %
+                                </span>
+                              </>
+                            )}
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -212,7 +243,13 @@ export default function LeaderboardPage() {
                   Showing {filtered.length} of {children.length} loaded
                 </p>
                 {hasMore && (
-                  <Button variant="outline" size="sm" onClick={loadMore} disabled={loadingMore}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="max-sm:min-h-[44px]"
+                    onClick={loadMore}
+                    disabled={loadingMore}
+                  >
                     {loadingMore ? "Loading..." : "Load More"}
                   </Button>
                 )}

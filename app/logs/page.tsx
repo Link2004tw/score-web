@@ -75,16 +75,22 @@ export default function LogsPage() {
   return (
     <ProtectedRoute>
       <Navbar />
-      <div className="bg-background p-4 md:p-8">
+      <div className="bg-background p-4 pb-20 md:p-8 md:pb-8">
         <div className="mx-auto max-w-4xl space-y-4">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold tracking-tight">Audit Logs</h1>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" onClick={fetchLogs} disabled={loading}>
+              <Button
+                variant="outline"
+                size="sm"
+                className="max-sm:min-h-[44px]"
+                onClick={fetchLogs}
+                disabled={loading}
+              >
                 Refresh
               </Button>
               <select
-                className="h-10 rounded-lg border border-input bg-transparent px-3 text-sm"
+                className="max-sm:h-11 h-10 rounded-lg border border-input bg-transparent px-3 text-sm"
                 value={limit}
                 onChange={(e) => {
                   setLimit(Number(e.target.value));

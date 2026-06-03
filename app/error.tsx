@@ -15,7 +15,7 @@ export default function ErrorPage({
   }, [error]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-4 text-center">
+    <div className="flex min-h-dvh flex-col items-center justify-center gap-4 p-4 text-center">
       <h1 className="text-4xl font-bold tracking-tight">Something went wrong</h1>
       <p className="max-w-md text-muted-foreground">
         An unexpected error occurred. Please try again or return to the home page.

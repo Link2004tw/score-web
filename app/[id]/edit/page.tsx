@@ -23,7 +23,6 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
   const handleSubmit = async (data: Child) => {
     if (!child) return;
     try {
-      console.log(data);
       await updateChildAction(child.id, data);
       router.push(`/${child.id}`);
     } catch (e) {
@@ -69,7 +68,7 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
   if (notFound) {
     return (
       <ProtectedRoute>
-        <div className="min-h-screen bg-background p-4 md:p-8">
+        <div className="min-h-dvh bg-background p-4 md:p-8">
           <div className="mx-auto max-w-2xl">
             <p className="text-muted-foreground">Student not found.</p>
             <Link href="/leaderboard">
@@ -86,7 +85,7 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
   return (
     <ProtectedRoute>
       <Navbar />
-      <div className="bg-background p-4 md:p-8">
+      <div className="bg-background p-4 pb-20 md:p-8 md:pb-8">
         <div className="mx-auto max-w-2xl space-y-6">
           <Link
             href={`/${child.id}`}

@@ -2,47 +2,63 @@ import { describe, it, expect } from "vitest";
 import { filterStudents } from "../filter";
 import type { StoredChild } from "../schemas";
 
+function student(overrides: Partial<StoredChild> = {}): StoredChild {
+  return {
+    id: "",
+    name: "",
+    grade: "1 primary",
+    gender: "male",
+    score: 0,
+    normalAttendance: 0,
+    choirAttendance: 0,
+    choirMisses: 0,
+    choirStatus: "active",
+    createdAt: "2025-01-01T00:00:00Z",
+    ...overrides,
+  };
+}
+
 const students: StoredChild[] = [
-  {
+  student({
     id: "1",
     name: "Alice Smith",
     grade: "5 primary",
     gender: "female",
     score: 95,
     createdAt: "2025-01-01T00:00:00Z",
-  },
-  {
+  }),
+  student({
     id: "2",
     name: "Bob Jones",
     grade: "3 primary",
     gender: "male",
     score: 82,
     createdAt: "2025-01-02T00:00:00Z",
-  },
-  {
+  }),
+  student({
     id: "3",
     name: "Charlie Brown",
     grade: "5 primary",
     gender: "male",
     score: 78,
     createdAt: "2025-01-03T00:00:00Z",
-  },
-  {
+  }),
+  student({
     id: "4",
     name: "Diana Prince",
     grade: "kg2",
     gender: "female",
     score: 100,
     createdAt: "2025-01-04T00:00:00Z",
-  },
-  {
+  }),
+  student({
     id: "5",
     name: "Edward Norton",
     grade: "1 primary",
     gender: "male",
     score: 88,
     createdAt: "2025-01-05T00:00:00Z",
-  },
+  }),
 ];
 
 describe("filterStudents", () => {
@@ -62,10 +78,7 @@ describe("filterStudents", () => {
     it("filters by partial name match", () => {
       const result = filterStudents(students, { search: "b" });
       expect(result).toHaveLength(2);
-      expect(result.map((s) => s.name).sort()).toEqual([
-        "Bob Jones",
-        "Charlie Brown",
-      ]);
+      expect(result.map((s) => s.name).sort()).toEqual(["Bob Jones", "Charlie Brown"]);
     });
 
     it("is case-insensitive", () => {

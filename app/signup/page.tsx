@@ -50,7 +50,7 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div className="min-h-dvh bg-background flex items-center justify-center p-4">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Create Account</CardTitle>
@@ -64,27 +64,65 @@ export default function SignupPage() {
               </p>
             )}
             <div className="flex flex-col gap-1">
-              <label htmlFor="displayName" className="text-sm font-medium">Display Name</label>
-              <Input id="displayName" type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)} required placeholder="John Doe" />
+              <label htmlFor="displayName" className="text-sm font-medium">
+                Display Name
+              </label>
+              <Input
+                id="displayName"
+                type="text"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                required
+                placeholder="John Doe"
+              />
             </div>
             <div className="flex flex-col gap-1">
-              <label htmlFor="email" className="text-sm font-medium">Email</label>
-              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="you@example.com" />
+              <label htmlFor="email" className="text-sm font-medium">
+                Email
+              </label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="you@example.com"
+              />
             </div>
             <div className="flex flex-col gap-1">
-              <label htmlFor="password" className="text-sm font-medium">Password</label>
-              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="••••••••" />
+              <label htmlFor="password" className="text-sm font-medium">
+                Password
+              </label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="••••••••"
+              />
             </div>
             <div className="flex flex-col gap-1">
-              <label htmlFor="confirmPassword" className="text-sm font-medium">Confirm Password</label>
-              <Input id="confirmPassword" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required placeholder="••••••••" />
+              <label htmlFor="confirmPassword" className="text-sm font-medium">
+                Confirm Password
+              </label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                placeholder="••••••••"
+              />
             </div>
             <Button type="submit" className="mt-2" disabled={loading}>
               {loading ? "Creating account..." : "Sign Up"}
             </Button>
             <p className="text-sm text-center text-muted-foreground">
               Already have an account?{" "}
-              <Link href="/login" className="text-primary underline">Login</Link>
+              <Link href="/login" className="text-primary underline">
+                Login
+              </Link>
             </p>
           </form>
         </CardContent>

@@ -92,7 +92,7 @@ export function ChildForm({ onSubmit, defaultValues, submitLabel = "Submit" }: C
           id="grade"
           {...register("grade")}
           className={cn(
-            "h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+            "max-sm:h-11 h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
             errors.grade && "border-destructive",
           )}
         >
@@ -114,7 +114,7 @@ export function ChildForm({ onSubmit, defaultValues, submitLabel = "Submit" }: C
           id="gender"
           {...register("gender")}
           className={cn(
-            "h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+            "max-sm:h-11 h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
             errors.gender && "border-destructive",
           )}
         >
@@ -140,7 +140,7 @@ export function ChildForm({ onSubmit, defaultValues, submitLabel = "Submit" }: C
         {errors.score && <span className="text-xs text-destructive">{errors.score.message}</span>}
       </div>
 
-      <Button type="submit" size="lg" className="mt-2" disabled={isSubmitting}>
+      <Button type="submit" size="lg" className="mt-2 max-sm:min-h-[44px]" disabled={isSubmitting}>
         {isSubmitting ? "Saving..." : submitLabel}
       </Button>
     </form>

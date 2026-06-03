@@ -11,6 +11,7 @@ import { deleteChildAction } from "@/lib/actions";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import type { StoredChild } from "@/lib/schemas";
 import { getChildColor, colorDot } from "@/lib/color";
+import { getTotalWednesdaysSince } from "@/lib/attendance-utils";
 
 export default function ChildPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -64,7 +65,7 @@ export default function ChildPage({ params }: { params: Promise<{ id: string }> 
   if (notFound) {
     return (
       <ProtectedRoute>
-        <div className="min-h-screen bg-background p-4 md:p-8">
+        <div className="min-h-dvh bg-background p-4 md:p-8">
           <div className="mx-auto max-w-2xl">
             <p className="text-muted-foreground">Student not found.</p>
             <Link href="/leaderboard">
@@ -81,7 +82,7 @@ export default function ChildPage({ params }: { params: Promise<{ id: string }> 
   return (
     <ProtectedRoute>
       <Navbar />
-      <div className="bg-background p-4 md:p-8">
+      <div className="bg-background p-4 pb-20 md:p-8 md:pb-8">
         <div className="mx-auto max-w-2xl space-y-6">
           <Link
             href="/leaderboard"
@@ -98,11 +99,20 @@ export default function ChildPage({ params }: { params: Promise<{ id: string }> 
             </h1>
             <div className="flex gap-2">
               <Link href={`/${child.id}/edit`}>
-                <Button variant="outline" size="sm">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="max-sm:min-h-[44px] max-sm:min-w-[44px]"
+                >
                   Edit
                 </Button>
               </Link>
-              <Button variant="destructive" size="sm" onClick={handleDelete}>
+              <Button
+                variant="destructive"
+                size="sm"
+                className="max-sm:min-h-[44px] max-sm:min-w-[44px]"
+                onClick={handleDelete}
+              >
                 Delete
               </Button>
             </div>
@@ -129,6 +139,46 @@ export default function ChildPage({ params }: { params: Promise<{ id: string }> 
                 <div className="flex justify-between border-b pb-2">
                   <dt className="text-sm text-muted-foreground">Score</dt>
                   <dd className="text-sm font-medium">{child.score}</dd>
+                </div>
+                <div className="flex justify-between border-b pb-2">
+                  <dt className="text-sm text-muted-foreground">Normal Attendance</dt>
+                  <dd className="text-sm font-medium tabular-nums text-right">
+                    {child.normalAttendance}
+                    <span className="text-muted-foreground ml-1">
+                      (
+                      {Math.round(
+                        (child.normalAttendance / getTotalWednesdaysSince(child.createdAt)) * 100,
+                      )}
+                      %)
+                    </span>
+                  </dd>
+                </div>
+                <div className="flex justify-between border-b pb-2">
+                  <dt className="text-sm text-muted-foreground">Choir Attendance</dt>
+                  <dd className="text-sm font-medium tabular-nums text-right">
+                    {child.choirAttendance}
+                    <span className="text-muted-foreground ml-1">
+                      (
+                      {Math.round(
+                        (child.choirAttendance / getTotalWednesdaysSince(child.createdAt)) * 100,
+                      )}
+                      %)
+                    </span>
+                  </dd>
+                </div>
+                <div className="flex justify-between border-b pb-2">
+                  <dt className="text-sm text-muted-foreground">Choir Misses</dt>
+                  <dd className="text-sm font-medium">{child.choirMisses}</dd>
+                </div>
+                <div className="flex justify-between border-b pb-2">
+                  <dt className="text-sm text-muted-foreground">Choir Status</dt>
+                  <dd className="text-sm font-medium">
+                    {child.choirStatus === "out" ? (
+                      <span className="text-destructive font-semibold">OUT</span>
+                    ) : (
+                      <span className="text-green-600 dark:text-green-400">Active</span>
+                    )}
+                  </dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm text-muted-foreground">Added</dt>

@@ -30,7 +30,7 @@ export default function CreatePage() {
   return (
     <ProtectedRoute>
       <Navbar />
-      <div className="bg-background p-4 md:p-8">
+      <div className="bg-background p-4 pb-20 md:p-8 md:pb-8">
         <div className="mx-auto max-w-2xl space-y-6">
           <Link
             href="/leaderboard"

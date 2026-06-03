@@ -1,8 +1,20 @@
 import { adminDb } from "./firebase-admin";
-import type { Child, StoredChild, gradeValues } from "./schemas";
+import type { Child, StoredChild, AttendanceSession, gradeValues } from "./schemas";
 import { auditLog } from "./audit-log";
 
+const SESSION_COLLECTION = "attendance-sessions";
 const COLLECTION = "children";
+
+export async function getAttendanceSession(
+  date: string,
+  type: "normal" | "choir",
+): Promise<AttendanceSession | null> {
+  const docId = `${date}_${type}`;
+  const ref = adminDb.collection(SESSION_COLLECTION).doc(docId);
+  const snap = await ref.get();
+  if (!snap.exists) return null;
+  return snap.data() as AttendanceSession;
+}
 
 function fromAdminSnapshot(data: FirebaseFirestore.DocumentData, id: string): StoredChild {
   return {
@@ -11,6 +23,12 @@ function fromAdminSnapshot(data: FirebaseFirestore.DocumentData, id: string): St
     grade: data.grade as (typeof gradeValues)[number],
     gender: data.gender as "male" | "female",
     score: Number(data.score) || 0,
+    normalAttendance: Number(data.normalAttendance) || 0,
+    choirAttendance: Number(data.choirAttendance) || 0,
+    choirMisses: Number(data.choirMisses) || 0,
+    choirStatus: (data.choirStatus as "active" | "out") ?? "active",
+    lastNormalDate: data.lastNormalDate as string | undefined,
+    lastChoirDate: data.lastChoirDate as string | undefined,
     createdAt: (data.createdAt as string) ?? new Date().toISOString(),
   };
 }

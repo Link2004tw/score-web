@@ -23,4 +23,19 @@ export type Child = z.infer<typeof childSchema>;
 export interface StoredChild extends Child {
   id: string;
   createdAt: string;
+  normalAttendance: number;
+  choirAttendance: number;
+  choirMisses: number;
+  choirStatus: "active" | "out";
+  lastNormalDate?: string;
+  lastChoirDate?: string;
+}
+
+export type AttendanceType = "normal" | "choir";
+
+export interface AttendanceSession {
+  date: string;
+  type: AttendanceType;
+  attendees: Record<string, string>;
+  count: number;
 }

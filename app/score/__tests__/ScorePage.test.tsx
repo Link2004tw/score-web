@@ -35,6 +35,13 @@ vi.mock("@/components/ProtectedRoute", () => ({
   ),
 }));
 
+const baseAttendance = {
+  normalAttendance: 0,
+  choirAttendance: 0,
+  choirMisses: 0,
+  choirStatus: "active" as const,
+};
+
 const mockStudents = [
   {
     id: "1",
@@ -43,6 +50,7 @@ const mockStudents = [
     gender: "female" as const,
     score: 95,
     createdAt: "2025-01-01T00:00:00Z",
+    ...baseAttendance,
   },
   {
     id: "2",
@@ -51,6 +59,7 @@ const mockStudents = [
     gender: "male" as const,
     score: 82,
     createdAt: "2025-01-02T00:00:00Z",
+    ...baseAttendance,
   },
   {
     id: "3",
@@ -59,6 +68,7 @@ const mockStudents = [
     gender: "male" as const,
     score: 78,
     createdAt: "2025-01-03T00:00:00Z",
+    ...baseAttendance,
   },
   {
     id: "4",
@@ -67,6 +77,7 @@ const mockStudents = [
     gender: "female" as const,
     score: 100,
     createdAt: "2025-01-04T00:00:00Z",
+    ...baseAttendance,
   },
 ];
 
@@ -75,7 +86,7 @@ describe("ScorePage", () => {
     vi.clearAllMocks();
     mockFetch.mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve(mockStudents),
+      json: () => Promise.resolve({ children: mockStudents }),
     });
   });
 
@@ -99,7 +110,7 @@ describe("ScorePage", () => {
   it("shows no students message when API returns empty", async () => {
     mockFetch.mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve([]),
+      json: () => Promise.resolve({ children: [] }),
     });
 
     render(<ScorePage />);
@@ -118,9 +129,7 @@ describe("ScorePage", () => {
     render(<ScorePage />);
 
     await waitFor(() => {
-      expect(
-        screen.getByText("Failed to load students.")
-      ).toBeInTheDocument();
+      expect(screen.getByText("Failed to load students.")).toBeInTheDocument();
     });
   });
 
@@ -187,9 +196,7 @@ describe("ScorePage", () => {
 
       await user.type(searchInput, "xyzzy");
 
-      expect(
-        screen.getByText("No students match your filters.")
-      ).toBeInTheDocument();
+      expect(screen.getByText("No students match your filters.")).toBeInTheDocument();
     });
   });
 
@@ -252,9 +259,7 @@ describe("ScorePage", () => {
       await user.click(incrementButtons[0]);
 
       await waitFor(() => {
-        expect(
-          screen.getByText("Student not found")
-        ).toBeInTheDocument();
+        expect(screen.getByText("Student not found")).toBeInTheDocument();
       });
     });
   });

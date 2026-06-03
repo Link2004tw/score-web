@@ -84,22 +84,22 @@ export default function ScorePage() {
     );
 
   const selectClass =
-    "h-10 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+    "max-sm:h-11 h-10 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
 
   return (
     <ProtectedRoute>
       <Navbar />
-      <div className="bg-background p-4 md:p-8">
+      <div className="bg-background p-4 pb-20 md:p-8 md:pb-8">
         <div className="mx-auto max-w-2xl space-y-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold tracking-tight">Adjust Scores</h1>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <h1 className="text-xl md:text-2xl font-bold tracking-tight">Adjust Scores</h1>
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground">Amount:</span>
               <Input
                 type="number"
                 value={customAmount}
                 onChange={(e) => setCustomAmount(e.target.value)}
-                className="h-10 w-20 text-center"
+                className="max-sm:h-11 h-10 w-20 text-center"
                 min={1}
                 max={100}
               />
@@ -113,7 +113,7 @@ export default function ScorePage() {
             className="h-12 text-base"
           />
 
-          <div className="flex gap-4">
+          <div className="flex gap-4 max-sm:flex-col max-sm:gap-2">
             <select
               value={genderFilter}
               onChange={(e) => setGenderFilter(e.target.value)}
@@ -180,7 +180,7 @@ export default function ScorePage() {
                         <Button
                           size="icon"
                           variant="destructive"
-                          className="size-8"
+                          className="max-sm:size-11 size-8"
                           disabled={updating === child.id}
                           onClick={() => handleAdjust(child.id, -Number(customAmount))}
                         >
@@ -188,7 +188,7 @@ export default function ScorePage() {
                         </Button>
                         <Button
                           size="icon"
-                          className="size-8"
+                          className="max-sm:size-11 size-8"
                           disabled={updating === child.id}
                           onClick={() => handleAdjust(child.id, Number(customAmount))}
                         >
