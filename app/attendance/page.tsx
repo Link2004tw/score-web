@@ -197,6 +197,39 @@ export default function AttendancePage() {
             </button>
           </div>
 
+          <div className="flex items-center gap-2 flex-wrap">
+            <Button
+              variant="outline"
+              size="sm"
+              className="max-sm:min-h-[44px]"
+              onClick={handleMarkAll}
+              disabled={loading || filtered.length === 0}
+            >
+              Mark All Present
+            </Button>
+            <Link href="/attendance/history">
+              <Button variant="ghost" size="sm" className="max-sm:min-h-[44px]">
+                View History
+              </Button>
+            </Link>
+            {activeTab === "choir" && children.length > 0 && (
+              <Button
+                variant="destructive"
+                size="sm"
+                className="max-sm:min-h-[44px]"
+                onClick={() => setShowCompleteConfirm(true)}
+                disabled={completing}
+              >
+                {completing ? "Processing..." : "Complete Choir Session"}
+              </Button>
+            )}
+            {filtered.length < children.length && (
+              <p className="text-xs text-muted-foreground">
+                ({filtered.length} of {children.length} shown)
+              </p>
+            )}
+          </div>
+
           <div className="flex flex-col gap-4">
             <Input
               placeholder="Search by name..."
@@ -227,28 +260,6 @@ export default function AttendancePage() {
                 ))}
               </select>
             </div>
-          </div>
-
-          <div className="flex items-center gap-2 flex-wrap">
-            <Button
-              variant="outline"
-              size="sm"
-              className="max-sm:min-h-[44px]"
-              onClick={handleMarkAll}
-              disabled={loading || filtered.length === 0}
-            >
-              Mark All Present
-            </Button>
-            <Link href="/attendance/history">
-              <Button variant="ghost" size="sm" className="max-sm:min-h-[44px]">
-                View History
-              </Button>
-            </Link>
-            {filtered.length < children.length && (
-              <p className="text-xs text-muted-foreground">
-                ({filtered.length} of {children.length} shown)
-              </p>
-            )}
           </div>
 
           {error && (
@@ -334,17 +345,6 @@ export default function AttendancePage() {
               })
             )}
           </div>
-
-          {activeTab === "choir" && children.length > 0 && (
-            <Button
-              variant="destructive"
-              className="w-full max-sm:min-h-[44px]"
-              onClick={() => setShowCompleteConfirm(true)}
-              disabled={completing}
-            >
-              {completing ? "Processing..." : "Complete Choir Session"}
-            </Button>
-          )}
         </div>
       </div>
 

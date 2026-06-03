@@ -14,7 +14,7 @@ const cspHeader = `
   object-src 'none';
   base-uri 'self';
   form-action 'self';
-  frame-src 'self' https://apis.google.com;
+  frame-src 'self' https://apis.google.com https://${process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ?? "score-web-27396.firebaseapp.com"};
   frame-ancestors 'none';
   upgrade-insecure-requests;
 `;
