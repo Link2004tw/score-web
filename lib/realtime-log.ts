@@ -4,6 +4,8 @@ import { adminRtdb } from "./firebase-admin";
 interface LogEntry {
   action: string;
   targetId?: string;
+  /** Who performed the action (display name/email/etc) */
+  actorDisplayName?: string;
   detail?: string;
   timestamp?: string;
 }

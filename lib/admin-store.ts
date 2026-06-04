@@ -39,12 +39,8 @@ export async function addChild(child: Child): Promise<StoredChild> {
     createdAt: new Date().toISOString(),
   };
   const ref = await adminDb.collection(COLLECTION).add(data);
-  auditLog({
-    action: "addChild",
-    targetId: ref.id,
-    targetName: child.name,
-    detail: child.name,
-  });
+  // NOTE: Intentionally no audit log here.
+  // Audit logs for add/update/delete are written by the action handlers.
   return fromAdminSnapshot({ ...data, id: ref.id }, ref.id);
 }
 
@@ -79,7 +75,11 @@ export async function getChildById(id: string): Promise<StoredChild | undefined>
   return fromAdminSnapshot(snapshot.data()!, snapshot.id);
 }
 
-export async function updateChild(id: string, updates: Partial<Child>): Promise<void> {
+export async function updateChild(
+  id: string,
+  updates: Partial<Child>,
+  actorDisplayName?: string,
+): Promise<void> {
   const ref = adminDb.collection(COLLECTION).doc(id);
 
   // Fetch name before update so we can store it in the audit log
@@ -88,10 +88,16 @@ export async function updateChild(id: string, updates: Partial<Child>): Promise<
 
   await ref.update(updates);
   const changed = Object.keys(updates).join(", ");
-  auditLog({ action: "updateChild", targetId: id, targetName, detail: changed });
+  auditLog({
+    action: "updateChild",
+    targetId: id,
+    targetName,
+    detail: changed,
+    actorDisplayName,
+  });
 }
 
-export async function deleteChild(id: string): Promise<void> {
+export async function deleteChild(id: string, actorDisplayName?: string): Promise<void> {
   const ref = adminDb.collection(COLLECTION).doc(id);
 
   // Fetch name before delete so we can store it in the audit log
@@ -99,5 +105,10 @@ export async function deleteChild(id: string): Promise<void> {
   const targetName = before.exists ? ((before.data()?.name as string) ?? undefined) : undefined;
 
   await ref.delete();
-  auditLog({ action: "deleteChild", targetId: id, targetName });
+  auditLog({
+    action: "deleteChild",
+    targetId: id,
+    targetName,
+    actorDisplayName,
+  });
 }

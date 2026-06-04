@@ -20,22 +20,29 @@ export async function GET(request: NextRequest) {
 
     const url = new URL(request.url);
     const limit = Math.min(Math.max(Number(url.searchParams.get("limit") ?? 100), 1), 500);
+    const page = Math.max(Number(url.searchParams.get("page") ?? 1), 1);
+    const actionFilter = url.searchParams.get("action") ?? null;
 
-    // NOTE: RTDB requires indexes for `orderByChild(...)`.
-    // To avoid runtime failures when indexes are not configured yet, we fetch a bounded set
-    // (by key) and sort client-side (in-memory) by `timestamp`.
-    const snapshot = await adminRtdb.ref("logs").limitToLast(limit).get();
+    // RTDB stores logs under `logs/<pushId>`.
+    // Without RTDB indexes for `orderByChild(timestamp)`, we can't reliably fetch “page N” efficiently.
+    // To keep pagination correct (newest-first), we fetch up to (page * limit) newest records (bounded),
+    // then sort/filter in memory, and finally slice for the requested page.
+    const maxFetch = 5000; // hard cap to avoid huge reads on large page numbers
+    const fetchCount = Math.min(page * limit, maxFetch);
+
+    const snapshot = await adminRtdb.ref("logs").limitToLast(fetchCount).get();
     const raw = snapshot.val() as Record<string, unknown> | null;
 
-    const logs = raw
+    let logs = raw
       ? Object.entries(raw).map(([id, v]) => {
           const entry = v as Record<string, unknown>;
           return {
             id,
             action: entry.action,
             // normalize to simpler fields for the UI
-            targetId: entry.targetId ?? entry.targetId,
+            targetId: (entry.targetId as string | undefined) ?? undefined,
             targetName: entry.targetName,
+            actorDisplayName: entry.actorDisplayName,
             detail: entry.detail,
             timestamp: entry.timestamp,
           };
@@ -43,12 +50,21 @@ export async function GET(request: NextRequest) {
       : [];
 
     logs.sort((a, b) => {
-      const at = Number(a.timestamp ?? 0);
-      const bt = Number(b.timestamp ?? 0);
-      return at - bt;
+      const at = typeof a.timestamp === "string" ? new Date(a.timestamp).getTime() : 0;
+      const bt = typeof b.timestamp === "string" ? new Date(b.timestamp).getTime() : 0;
+      // newest -> oldest
+      return bt - at;
     });
 
-    return NextResponse.json({ logs });
+    if (actionFilter && actionFilter !== "all") {
+      logs = logs.filter((l) => l.action === actionFilter);
+    }
+
+    const start = (page - 1) * limit;
+    const paged = logs.slice(start, start + limit);
+    const hasNext = start + limit < logs.length;
+
+    return NextResponse.json({ logs: paged, page, limit, hasNext });
   } catch (error) {
     if (error instanceof AuthError) {
       return NextResponse.json({ error: error.message }, { status: 401 });

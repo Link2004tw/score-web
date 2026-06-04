@@ -23,21 +23,47 @@ async function checkRateLimit(ip?: string) {
 }
 
 export async function addChildAction(data: Child, ip?: string) {
-  await requireAuth();
+  const auth = await requireAuth();
   await checkRateLimit(ip);
-  return await addChild(data);
+  const actorDisplayName =
+    (auth as { name?: string; email?: string } | null)?.name ??
+    (auth as { email?: string } | null)?.email ??
+    "Unknown";
+
+  const child = await addChild(data);
+
+  auditLog({
+    action: "addChild",
+    targetId: child.id,
+    targetName: child.name,
+    detail: child.name,
+    actorDisplayName,
+  });
+  return child;
 }
 
 export async function deleteChildAction(id: string, ip?: string) {
-  await requireAuth();
+  const auth = await requireAuth();
   await checkRateLimit(ip);
-  await deleteChild(id);
+
+  const actorDisplayName =
+    (auth as { name?: string; email?: string } | null)?.name ??
+    (auth as { email?: string } | null)?.email ??
+    "Unknown";
+
+  await deleteChild(id, actorDisplayName);
 }
 
 export async function updateChildAction(id: string, data: Partial<Child>, ip?: string) {
-  await requireAuth();
+  const auth = await requireAuth();
   await checkRateLimit(ip);
-  await updateChild(id, data);
+
+  const actorDisplayName =
+    (auth as { name?: string; email?: string } | null)?.name ??
+    (auth as { email?: string } | null)?.email ??
+    "Unknown";
+
+  await updateChild(id, data, actorDisplayName);
 }
 
 export async function adjustScoreAction(
@@ -45,7 +71,7 @@ export async function adjustScoreAction(
   delta: number,
 ): Promise<{ score: number } | { error: string }> {
   try {
-    await requireAuth();
+    const auth = await requireAuth();
     await checkRateLimit();
 
     const child = await getChildById(id);
@@ -62,12 +88,18 @@ export async function adjustScoreAction(
 
     await ref.update({ score: newScore });
 
+    const actorDisplayName =
+      (auth as { name?: string; email?: string } | null)?.name ??
+      (auth as { email?: string } | null)?.email ??
+      "Unknown";
+
     auditLog({
       action: "adjustScore",
       targetId: id,
       // store name in the log so the logs UI can display it
       targetName: child.name,
       detail: `delta=${delta} oldScore=${oldScore} newScore=${newScore}`,
+      actorDisplayName,
     });
 
     return { score: newScore };
@@ -85,8 +117,13 @@ export async function markAttendanceAction(
   type: AttendanceType,
 ): Promise<{ count: number; action: "marked" | "unmarked" } | { error: string }> {
   try {
-    await requireAuth();
+    const auth = await requireAuth();
     await checkRateLimit();
+
+    const actorDisplayName =
+      (auth as { name?: string; email?: string } | null)?.name ??
+      (auth as { email?: string } | null)?.email ??
+      "Unknown";
 
     const child = await getChildById(id);
     if (!child) return { error: "Student not found" };
@@ -112,7 +149,13 @@ export async function markAttendanceAction(
             count: FieldValue.increment(-1),
           }),
         ]);
-        auditLog({ action: "unmarkNormalAttendance", targetId: id, targetName: child.name });
+        auditLog({
+          action: "unmarkNormalAttendance",
+          targetId: id,
+          targetName: child.name,
+          actorDisplayName,
+        });
+
         return { count: Math.max(0, (child.normalAttendance || 0) - 1), action: "unmarked" };
       }
       await Promise.all([
@@ -125,7 +168,13 @@ export async function markAttendanceAction(
           { merge: true },
         ),
       ]);
-      auditLog({ action: "markNormalAttendance", targetId: id, targetName: child.name });
+      auditLog({
+        action: "markNormalAttendance",
+        targetId: id,
+        targetName: child.name,
+        actorDisplayName,
+      });
+
       return { count: (child.normalAttendance || 0) + 1, action: "marked" };
     }
 
@@ -141,7 +190,13 @@ export async function markAttendanceAction(
           count: FieldValue.increment(-1),
         }),
       ]);
-      auditLog({ action: "unmarkChoirAttendance", targetId: id, targetName: child.name });
+      auditLog({
+        action: "unmarkChoirAttendance",
+        targetId: id,
+        targetName: child.name,
+        actorDisplayName,
+      });
+
       return { count: Math.max(0, (child.choirAttendance || 0) - 1), action: "unmarked" };
     }
 
@@ -164,7 +219,13 @@ export async function markAttendanceAction(
       { ...sessionBase, attendees: { [id]: child.name }, count: FieldValue.increment(1) },
       { merge: true },
     );
-    auditLog({ action: "markChoirAttendance", targetId: id, targetName: child.name });
+    auditLog({
+      action: "markChoirAttendance",
+      targetId: id,
+      targetName: child.name,
+      actorDisplayName,
+    });
+
     return { count: (child.choirAttendance || 0) + 1, action: "marked" };
   } catch (e) {
     if (e instanceof AuthError) return { error: e.message };
@@ -180,8 +241,13 @@ export async function markAllAttendanceAction(
   type: AttendanceType,
 ): Promise<{ marked: number; errors: number } | { error: string }> {
   try {
-    await requireAuth();
+    const auth = await requireAuth();
     await checkRateLimit();
+
+    const actorDisplayName =
+      (auth as { name?: string; email?: string } | null)?.name ??
+      (auth as { email?: string } | null)?.email ??
+      "Unknown";
 
     const today = getLastWednesdayDate();
     const { FieldValue } = await import("firebase-admin/firestore");
@@ -229,6 +295,7 @@ export async function markAllAttendanceAction(
     auditLog({
       action: `markAll${type === "normal" ? "Normal" : "Choir"}Attendance`,
       detail: `${marked} students marked`,
+      actorDisplayName,
     });
 
     return { marked, errors: 0 };
@@ -245,8 +312,13 @@ export async function finalizeChoirSessionAction(): Promise<
   { processed: number; markedOut: number } | { error: string }
 > {
   try {
-    await requireAuth();
+    const auth = await requireAuth();
     await checkRateLimit();
+
+    const actorDisplayName =
+      (auth as { name?: string; email?: string } | null)?.name ??
+      (auth as { email?: string } | null)?.email ??
+      "Unknown";
 
     const today = getLastWednesdayDate();
     const { FieldValue } = await import("firebase-admin/firestore");
@@ -289,6 +361,7 @@ export async function finalizeChoirSessionAction(): Promise<
     auditLog({
       action: "finalizeChoirSession",
       detail: `${processed} absences processed, ${markedOut} students marked out`,
+      actorDisplayName,
     });
 
     return { processed, markedOut };

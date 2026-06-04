@@ -1,0 +1,4 @@
+- [x] Remove “addChild” audit log entry
+- [x] Add actor display name to audit log entries (who performed the action)
+- [x] Update logs API + UI to return/display actor display name
+- [x] Sort audit logs newest -> oldest
