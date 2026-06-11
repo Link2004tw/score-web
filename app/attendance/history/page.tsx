@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,7 @@ function isWednesday(dateStr: string): boolean {
 }
 
 export default function AttendanceHistoryPage() {
+  const router = useRouter();
   const [date, setDate] = useState(getLastWednesdayDate());
   const [type, setType] = useState<"normal" | "choir">("normal");
   const [session, setSession] = useState<AttendanceSession | null | undefined>(undefined);
@@ -33,6 +35,7 @@ export default function AttendanceHistoryPage() {
       setSession(data.session);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to load attendance");
+      if (e instanceof Error && e.message === "Unauthorized") router.push("/login");
     }
     setLoading(false);
   };

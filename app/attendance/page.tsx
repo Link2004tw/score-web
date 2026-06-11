@@ -122,6 +122,7 @@ export default function AttendancePage() {
     setLoading(true);
     const ids = unmarked.map((c) => c.id);
     const result = await markAllAttendanceAction(ids, activeTab);
+    await loadStudents();
     if ("error" in result) {
       setError(result.error);
     } else {
@@ -130,7 +131,6 @@ export default function AttendancePage() {
         setError(`${errors} student(s) failed to mark`);
       }
     }
-    await loadStudents();
     setLoading(false);
   };
 

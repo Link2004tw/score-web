@@ -12,6 +12,8 @@
 
 # testing
 /coverage
+/test-results/
+/playwright/.auth/
 
 # next.js
 /.next/
@@ -41,3 +43,6 @@ score-web-firebase-adminsdk.json
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# firebase emulator
+/firebase/emulator-data/

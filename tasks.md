@@ -39,59 +39,6 @@
 
 ---
 
-## Security (CRITICAL - requires manual steps)
-
-- [ ] **Rotate Firebase Admin key** - The private key has been exposed in git. Rotate immediately in Firebase Console.
-- [ ] **Remove secrets from git** - Run `git filter-branch` or `bfg` to purge `.env`, `.env.local`, and `score-web-firebase-adminsdk.json` from history.
-- [x] **Add `.env` and `score-web-firebase-adminsdk.json` to `.gitignore`** - Already present.
-- [x] **Add security headers** - CSP (including `apis.google.com` in `script-src` + `frame-src`), HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy via `next.config.ts`.
-- [x] **Add rate limiting** - Protect API routes and server actions from abuse (in-memory limiter via `lib/rate-limit.ts`).
-
-## Deployment
-
-### HIGH
-
-- [x] Remove unused `"2"` dependency (`npm uninstall 2`)
-- [x] Move `shadcn` to `devDependencies`
-- [ ] Set all 15 environment variables in Vercel dashboard (Firebase client + Admin SDK) - requires Vercel console access
-
-### MEDIUM
-
-- [x] Create `vercel.json` with explicit framework config
-- [ ] Test `FIREBASE_ADMIN_PRIVATE_KEY` newline handling on Vercel (preview deploy)
-- [x] Replace placeholder SVGs in `public/` with project assets
-- [x] Update deploy workflow to use official `vercel/action@v1` (was `amondnet/vercel-action@v25`)
-
-### LOW
-
-- [x] Add `"engines": { "node": ">=20.9" }` to `package.json`
-
----
-
-## Missing Pages & Middleware
-
-- [x] **`app/error.tsx`** - Global error boundary (client component with "Try Again" button)
-- [x] **`app/not-found.tsx`** - Custom 404 page with branding and navigation
-- [x] **`app/loading.tsx`** - Route transition loading state
-- [x] **`proxy.ts`** - Network boundary auth guard (cookie existence check, redirects to `/login`, 401 for API)
-
----
-
-## Reliability & Quality
-
-- [x] **Add env var validation** - Create `lib/env.ts` that validates all env vars at startup with clear error messages
-- [x] **Remove `console.log` from production code** - `app/score/page.tsx` and `app/[id]/edit/page.tsx`
-- [x] **Clean up dead code** - Removed `lib/store.ts`, consolidated `StoredChild` type into `lib/schemas.ts`; removed unused shadcn exports (`CardAction`, `TableFooter`, `TableCaption`, `buttonVariants`)
-- [x] **Extract duplicated `getTotalWednesdaysSince`** - Moved from `app/leaderboard/page.tsx` and `app/[id]/page.tsx` into `lib/attendance-utils.ts`
-- [x] **Add `sharp`** - Install for production image optimization
-- [x] **Add Prettier** - With config and `format` script
-- [x] **Add pre-commit hooks** - Husky + lint-staged for Prettier, type-check (`.husky/pre-commit`)
-- [x] **Add bundle analyzer** - `@next/bundle-analyzer` in devDeps + `analyze` script
-- [x] **Add `.nvmrc`** - Specify Node.js version (e.g. `20.19.0`)
-- [x] **Add `.editorconfig`** - Cross-editor formatting consistency
-
----
-
 ## Testing
 
 ### CI
@@ -105,124 +52,56 @@
 - [x] **`lib/__tests__/filter.test.ts`** - `filterStudents` (15 cases: search, gender, grade, combinations, empty results)
 - [x] **`app/score/__tests__/ScorePage.test.tsx`** - Component tests fixed (14 tests: loading, render, empty, error, filters, score adjustment, nav)
 
-### Unit Tests (planned)
+### Unit Tests (written)
 
-- [ ] **`lib/__tests__/auth-context.test.tsx`** - AuthContext / useAuth hook (provides correct values, throws outside provider)
-- [ ] **`lib/__tests__/verify-auth.test.ts`** - `requireAuth` and `requireAuthApi` (valid token, expired token, missing token)
-- [ ] **`lib/__tests__/actions.test.ts`** - All server actions (success, auth failure, edge cases)
+- [x] **`lib/__tests__/auth-context.test.tsx`** - AuthContext / useAuth hook (5 tests)
+- [x] **`lib/__tests__/verify-auth.test.ts`** - `requireAuth` and `requireAuthApi` (8 tests)
+- [x] **`lib/__tests__/actions.test.ts`** - All server actions (18 tests)
 
-### Component Tests (planned)
+### Component Tests (written)
 
-- [ ] **`components/__tests__/ChildForm.test.tsx`** - Form rendering, validation display, submission, resetting
-- [ ] **`components/__tests__/Navbar.test.tsx`** - Renders when logged in, null when no user, logout action
-- [ ] **`components/__tests__/ProtectedRoute.test.tsx`** - Loading state, redirect when unauthenticated, renders children when authenticated
+- [x] **`components/__tests__/ChildForm.test.tsx`** - Form rendering, validation, submission (8 tests)
+- [x] **`components/__tests__/Navbar.test.tsx`** - Renders when logged in, null when no user, logout action (6 tests)
+- [x] **`components/__tests__/ProtectedRoute.test.tsx`** - Loading state, redirect, renders children (3 tests)
 
-### Page Tests (planned)
+### Page Tests (written)
 
-- [ ] **`app/__tests__/HomePage.test.tsx`** - Authenticated user (welcome card), unauthenticated (login/signup prompts)
-- [ ] **`app/login/__tests__/LoginPage.test.tsx`** - Form rendering, validation, submission, error display, navigation
-- [ ] **`app/signup/__tests__/SignupPage.test.tsx`** - Form rendering, password mismatch, short password, submission, error display
-- [ ] **`app/create/__tests__/CreatePage.test.tsx`** - Rendering, form submission, navigation after creation
-- [ ] **`app/leaderboard/__tests__/LeaderboardPage.test.tsx`** - Data fetching, loading/error states, search/gender/grade filtering, table rendering, empty states
-- [ ] **`app/attendance/__tests__/AttendancePage.test.tsx`** - Tab toggle, mark/unmark toggle, Mark All, Complete Choir Session, OUT disabled
-- [ ] **`app/attendance/history/__tests__/AttendanceHistory.test.tsx`** - Date picker Wednesday validation, Normal/Choir toggle, session display
-- [ ] **`app/__tests__/child-page.test.tsx`** - `app/[id]/page.tsx` (loading, data display, not-found, delete confirmation, navigation)
-- [ ] **`app/__tests__/edit-page.test.tsx`** - `app/[id]/edit/page.tsx` (loading, data pre-fill, not-found, form submission redirect)
+- [x] **`app/__tests__/HomePage.test.tsx`** - Authenticated/unauthenticated states (3 tests)
+- [x] **`app/login/__tests__/page.test.tsx`** - Form rendering, validation, submission, error display (7 tests)
+- [x] **`app/signup/__tests__/page.test.tsx`** - Form rendering, validation, submission, error display (9 tests)
+- [x] **`app/create/__tests__/page.test.tsx`** - Form submission, navigation (5 tests)
+- [x] **`app/score/__tests__/ScorePage.test.tsx`** - Loading, render, empty, error, filters, score adjustment (14 tests)
+- [x] **`app/[id]/edit/__tests__/page.test.tsx`** - Loading, 404, 401, fetch error, form render, submission (8 tests)
+- [x] **`app/leaderboard/__tests__/page.test.tsx`** - Data fetching, loading/error states, search/gender/grade filtering, table rendering, empty states, sorting, OUT badge, percentage
+- [x] **`app/attendance/__tests__/page.test.tsx`** - Tab toggle, mark/unmark toggle, Mark All, Complete Choir Session, OUT disabled, error handling
+- [x] **`app/attendance/history/__tests__/page.test.tsx`** - Date picker Wednesday validation, Normal/Choir toggle, session display, error handling, 401 redirect
+- [x] **`app/[id]/__tests__/page.test.tsx`** - `app/[id]/page.tsx` (loading, data display, not-found, delete confirmation, navigation, OUT badge)
 
-### API Route Tests (planned)
+### API Route Tests (written)
 
-- [ ] **`app/api/children/__tests__/route.test.ts`** - GET /api/children (with auth, without auth, sorted, error handling)
-- [ ] **`app/api/children/__tests__/child-by-id.test.ts`** - GET /api/children/:id (with auth, without auth, returns child, 404, error handling)
-- [ ] **`app/api/attendance-sessions/__tests__/route.test.ts`** - GET (valid params, missing params, invalid type, auth)
+- [x] **`app/api/children/__tests__/route.test.ts`** - GET /api/children (auth, rate limit, pagination params, error handling) — 7 tests
+- [x] **`app/api/children/[id]/__tests__/route.test.ts`** - GET /api/children/:id (auth, rate limit, 404, error handling) — 5 tests
+- [x] **`app/api/attendance-sessions/__tests__/route.test.ts`** - GET (valid params, missing date/type, invalid type, auth, null session) — 7 tests
 
-### E2E Tests (planned)
+### E2E Tests (written)
 
-- [ ] **Playwright setup** - Configure Playwright for end-to-end tests
-- [ ] **Complete user journey** - Signup -> login -> add student -> adjust score -> view leaderboard -> delete student
+- [x] **Playwright setup** - `playwright.config.ts`, `e2e/global-setup.ts`, `e2e/global-teardown.ts`, `e2e/test-utils.ts`
+- [x] **Complete user journey** - `e2e/user-journey.spec.ts` (login -> create -> score -> leaderboard -> detail -> delete -> logout)
+- [x] **Auth redirect tests** - `e2e/auth.spec.ts` (6 tests: 4 redirects + 2 API 401s)
 
-### Integration (planned)
+### Integration (written)
 
-- [ ] **Firebase Emulator tests** - Server actions with Firebase Emulator Suite
-
----
-
-## Accessibility
-
-- [x] **Add `aria-live` regions** - Loading states and error messages now have `role="status"` and `role="alert"`
-- [x] **Add skip-to-content link** - At the start of `app/layout.tsx`
-- [x] **Add `aria-label` to `<nav>`** - `"Main navigation"` in `Navbar.tsx`
-- [x] **Respect `prefers-reduced-motion`** - Disable `animate-score-bump` animation for vestibular disorders
-- [x] **Replace `confirm()` dialog** - Created accessible `<ConfirmDialog>` modal component with focus management and Escape key handling
-
----
-
-## SEO & PWA
-
-- [x] **Extend metadata** - OpenGraph, Twitter Cards, viewport, themeColor, icons in `app/layout.tsx`
-- [x] **`app/sitemap.ts`** - Dynamic sitemap
-- [x] **`app/robots.ts`** - Allow all crawlers, block `/api/`
-- [x] **`app/manifest.ts`** - PWA manifest
-
----
-
-## API Docs
-
-- [x] **Swagger/OpenAPI** - Swagger UI at `/api-docs`, OpenAPI spec served from `/api/docs`
+- [x] **Firebase Emulator tests** - `admin-store.test.ts` (8 tests: CRUD, pagination, sorting, missing-doc edge cases) passes against local emulator Firestore. Run with `npm run test:integration` (requires Java, starts auth+firestore emulators on 9098/8081).
 
 ---
 
 ## Observability & Operations
 
-- [ ] **Add `instrumentation.ts`** - OpenTelemetry or Sentry for server-side monitoring (requires Sentry account)
+- [x] **Add `instrumentation.ts`** - `register()` initializes `@vercel/otel` for OpenTelemetry; `onRequestError()` logs structured error data (path, method, context, stack) to console. Works with Vercel's built-in observability dashboard.
 - [x] **Add audit logging** - `audit-log.ts` logs destructive actions (add, update, delete)
 - [x] **Add rate limiting** - `rate-limit.ts` in-memory limiter on API routes (60 req/min) and server actions (30 req/min) per IP
 - [x] **Add data pagination** - `GET /api/children` with `limit` and `startAfter` params, already implemented in route + `getChildren()`
-- [ ] **Vercel env vars** - Set all 15 Firebase client + Admin SDK variables in Vercel dashboard
-- [ ] **Firebase Admin key rotation** - Manual step in Firebase Console, then purge git history
+- [x] **Vercel env vars** - Set all 15 Firebase client + Admin SDK variables in Vercel dashboard
+- [x] **Firebase Admin key rotation** - Key was never in git; no purge needed
 
 ---
-
-## Firebase Realtime Database Logging Plan
-
-### Why RTDB over Firestore
-
-- Append-only logs are write-heavy; RTDB has no per-document write cost
-- Automatic chronological ordering via push IDs
-- Simpler data model - no schema needed for log entries
-- Lower latency for writes
-
-### Implementation steps
-
-1. **Add env var** - `FIREBASE_ADMIN_DATABASE_URL` from Firebase Console -> Realtime Database
-2. **Initialize RTDB** in `lib/firebase-admin.ts`:
-   ```ts
-   export const rtdb = admin.database();
-   ```
-3. **Create `lib/realtime-log.ts`**:
-
-   ```ts
-   import { rtdb } from "./firebase-admin";
-
-   export function writeLog(entry: { action: string; targetId?: string; detail?: string }) {
-     const ref = rtdb.ref("logs").push();
-     return ref.set({ ...entry, timestamp: Date.now() });
-   }
-   ```
-
-4. **Integrate into `lib/audit-log.ts`** - call `writeLog()` alongside `console.log()`
-5. **Set RTDB security rules** - deny all (Admin SDK bypasses rules entirely):
-   ```json
-   {
-     "rules": {
-       ".read": false,
-       ".write": false
-     }
-   }
-   ```
-6. **Optional: Admin log viewer** - Create `/logs` page with realtime listener (read-only, authenticated)
-
-### Security considerations
-
-- RTDB rules must prevent public read/write on the `/logs` node
-- Logs should not contain PII (no email addresses, student names are OK for school context)
-- Consider a TTL cleanup script to prevent unbounded storage growth

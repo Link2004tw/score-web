@@ -80,7 +80,28 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
     );
   }
 
-  if (!child) return null;
+  if (!child) {
+    return (
+      <ProtectedRoute>
+        <div className="min-h-dvh bg-background p-4 md:p-8">
+          <div className="mx-auto max-w-2xl">
+            {error && (
+              <div
+                className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive"
+                role="alert"
+                aria-live="assertive"
+              >
+                {error}
+              </div>
+            )}
+            <Link href="/leaderboard">
+              <Button className="mt-4">Back to Leaderboard</Button>
+            </Link>
+          </div>
+        </div>
+      </ProtectedRoute>
+    );
+  }
 
   return (
     <ProtectedRoute>

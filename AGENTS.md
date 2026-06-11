@@ -116,3 +116,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - `components/ConfirmDialog.tsx`: Accessible modal for delete/finalize confirmation
 - `tasks.md`: Full task list including test plan and RTDB logging plan
 - `.github/workflows/ci.yml`: CI pipeline (lint, typecheck, format:check, test, build)
+
+## Custom Commands
+
+- **`/sync-tasks`** — Archive fully-completed sections from `tasks.md` to `tasks_archived.md`. Run `pwsh scripts/sync-tasks.ps1` from the project root. Handles both markdown tables (last column ✅/`[x]`) and bullet-point checklists (all `- [x]`). Sections with any incomplete item are kept. Sections `Status Legend` and `Implementation Order` are never archived.

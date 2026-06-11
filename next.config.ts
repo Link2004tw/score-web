@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import withBundleAnalyzer from "@next/bundle-analyzer";
+import { withSentryConfig } from "@sentry/nextjs";
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -60,4 +61,13 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withBundleAnalyzer({ enabled: process.env.ANALYZE === "true" })(nextConfig);
+export default withBundleAnalyzer({ enabled: process.env.ANALYZE === "true" })(
+  withSentryConfig(nextConfig, {
+    org: "no-company-m3d",
+    project: "score-web",
+    authToken: process.env.SENTRY_AUTH_TOKEN,
+    tunnelRoute: "/sentry-tunnel",
+    widenClientFileUpload: true,
+    silent: !process.env.CI,
+  }),
+);
