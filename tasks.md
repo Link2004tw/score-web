@@ -97,7 +97,8 @@
 
 ## Observability & Operations
 
-- [x] **Add `instrumentation.ts`** - `register()` initializes `@vercel/otel` for OpenTelemetry; `onRequestError()` logs structured error data (path, method, context, stack) to console. Works with Vercel's built-in observability dashboard.
+- [x] **Add `instrumentation.ts`** - `register()` initializes `@vercel/otel` for OpenTelemetry and imports Sentry server/edge configs; `onRequestError` uses `Sentry.captureRequestError`. Merges Vercel dashboard observability with Sentry error tracking.
+- [x] **Add Sentry integration** - `sentry.server.config.ts`, `sentry.edge.config.ts`, `instrumentation-client.ts` with DSN, tracing (10% samples in prod), and logs enabled; `app/global-error.tsx` client error boundary; `withSentryConfig` in `next.config.ts` (org `no-company-m3d`, project `score-web`, tunnel route `/sentry-tunnel`); proxy excludes `sentry-tunnel` from auth checks. Source maps via `SENTRY_AUTH_TOKEN` env var.
 - [x] **Add audit logging** - `audit-log.ts` logs destructive actions (add, update, delete)
 - [x] **Add rate limiting** - `rate-limit.ts` in-memory limiter on API routes (60 req/min) and server actions (30 req/min) per IP
 - [x] **Add data pagination** - `GET /api/children` with `limit` and `startAfter` params, already implemented in route + `getChildren()`
