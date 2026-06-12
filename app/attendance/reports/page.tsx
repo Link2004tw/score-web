@@ -61,21 +61,6 @@ interface OverallReport {
   choirAvg: number;
 }
 
-function isWednesday(dateStr: string): boolean {
-  return new Date(dateStr + "T00:00:00").getDay() === 3;
-}
-
-function snapToWednesday(dateStr: string): string {
-  const d = new Date(dateStr + "T00:00:00");
-  const day = d.getDay();
-  const diff = (day - 3 + 7) % 7;
-  d.setDate(d.getDate() - diff);
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const dd = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${dd}`;
-}
-
 function getClassId(grade: string, gender: string): string {
   const isPrimary = grade.includes("primary");
   if (isPrimary) {
@@ -192,11 +177,7 @@ export default function ReportsPage() {
 
   const lastWednesday = useMemo(() => getLastWednesdayDate(), []);
 
-  const [startDate, setStartDate] = useState(() => {
-    const d = new Date();
-    d.setMonth(d.getMonth() - 3);
-    return snapToWednesday(d.toISOString().split("T")[0]);
-  });
+  const startDate = useMemo(() => process.env.NEXT_PUBLIC_REPORT_START_DATE ?? "", []);
   const [activeTab, setActiveTab] = useState<TabType>("overview");
   const [data, setData] = useState<ReportData | null>(null);
   const [loading, setLoading] = useState(false);
@@ -204,11 +185,6 @@ export default function ReportsPage() {
   const [search, setSearch] = useState("");
   const [gradeFilter, setGradeFilter] = useState("");
   const [genderFilter, setGenderFilter] = useState("");
-
-  const handleDateChange = (value: string) => {
-    if (!isWednesday(value)) return;
-    setStartDate(snapToWednesday(value));
-  };
 
   useEffect(() => {
     if (!startDate) return;
@@ -233,12 +209,9 @@ export default function ReportsPage() {
     fetchReport();
   }, [startDate, gradeFilter, genderFilter, router]);
 
-  const isDateValid = startDate && isWednesday(startDate);
-
   const allStudentReports = useMemo(
-    () =>
-      data && isDateValid ? buildStudentReports(data.students, data.sessions, data.weeks) : [],
-    [data, isDateValid],
+    () => (data && startDate ? buildStudentReports(data.students, data.sessions, data.weeks) : []),
+    [data, startDate],
   );
 
   const searchedStudentReports = useMemo(
@@ -396,28 +369,9 @@ export default function ReportsPage() {
           </div>
 
           <div className="flex flex-col gap-4">
-            <div>
-              <label htmlFor="report-start-date" className="text-sm font-medium mb-1 block">
-                Start Date (snaps to Wednesday)
-              </label>
-              <input
-                id="report-start-date"
-                type="date"
-                value={startDate}
-                onChange={(e) => handleDateChange(e.target.value)}
-                className="h-12 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-              />
-              {!isDateValid && startDate && (
-                <p className="text-sm text-destructive mt-1" role="alert">
-                  Please select a Wednesday
-                </p>
-              )}
-              {startDate && (
-                <p className="text-xs text-muted-foreground mt-1">
-                  Range: {startDate} → {lastWednesday}
-                </p>
-              )}
-            </div>
+            <p className="text-xs text-muted-foreground">
+              Range: {startDate} → {lastWednesday}
+            </p>
 
             <div className="flex gap-4 max-sm:flex-col max-sm:gap-2">
               <select
@@ -496,7 +450,7 @@ export default function ReportsPage() {
             </p>
           )}
 
-          {data && !loading && isDateValid && (
+          {data && !loading && startDate && (
             <>
               <div className="flex gap-1 rounded-lg bg-muted p-1">
                 {tabs.map((tab) => (
@@ -693,7 +647,7 @@ export default function ReportsPage() {
 
           {!startDate && !loading && (
             <p className="text-center py-8 text-muted-foreground">
-              Select a start date to generate the report.
+              Set NEXT_PUBLIC_REPORT_START_DATE in your environment variables.
             </p>
           )}
         </div>

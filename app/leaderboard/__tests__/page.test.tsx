@@ -89,10 +89,12 @@ const mockStudents = [
 describe("LeaderboardPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockFetch.mockResolvedValue({
-      ok: true,
-      json: () => Promise.resolve({ children: mockStudents, hasMore: false }),
-    });
+    mockFetch.mockImplementation(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ children: mockStudents, hasMore: false }),
+      }),
+    );
   });
 
   it("shows loading state initially", () => {
@@ -177,33 +179,34 @@ describe("LeaderboardPage", () => {
       },
     ];
 
-    let callCount = 0;
+    const responses = {
+      first: { children: mockStudents, hasMore: true },
+      more: { children: moreStudents, hasMore: false },
+    };
+
+    let callIndex = 0;
     mockFetch.mockImplementation(() => {
-      callCount++;
-      if (callCount === 1) {
-        return Promise.resolve({
-          ok: true,
-          json: () => Promise.resolve({ children: mockStudents, hasMore: true }),
-        });
-      }
+      const resp = callIndex >= 1 ? responses.more : responses.first;
+      callIndex++;
       return Promise.resolve({
         ok: true,
-        json: () => Promise.resolve({ children: moreStudents, hasMore: false }),
+        json: () => Promise.resolve(resp),
       });
     });
 
     const user = userEvent.setup();
 
     render(<LeaderboardPage />);
-    await waitFor(() => {
-      expect(screen.getByText("Load More")).toBeInTheDocument();
-    });
+    await screen.findByText("Load More");
 
     await user.click(screen.getByText("Load More"));
 
-    await waitFor(() => {
-      expect(screen.getByText("Frank More")).toBeInTheDocument();
-    });
+    await waitFor(
+      () => {
+        expect(screen.getByText("Frank More")).toBeInTheDocument();
+      },
+      { timeout: 3000 },
+    );
   });
 
   it("disables Load More button while loading", async () => {
