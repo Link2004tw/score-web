@@ -14,6 +14,26 @@ export function isTodayWednesday(): boolean {
   return new Date().getDay() === 3;
 }
 
+export function getAllWednesdaysInRange(from: string, to: string): string[] {
+  const dates: string[] = [];
+  const current = new Date(from + "T00:00:00");
+  const end = new Date(to + "T00:00:00");
+
+  while (current <= end) {
+    const y = current.getFullYear();
+    const m = String(current.getMonth() + 1).padStart(2, "0");
+    const d = String(current.getDate()).padStart(2, "0");
+    dates.push(`${y}-${m}-${d}`);
+    current.setDate(current.getDate() + 7);
+  }
+
+  return dates;
+}
+
+export function countWednesdaysInRange(from: string, to: string): number {
+  return getAllWednesdaysInRange(from, to).length;
+}
+
 export function getTotalWednesdaysSince(dateStr: string): number {
   const start = new Date(dateStr);
   const now = new Date();

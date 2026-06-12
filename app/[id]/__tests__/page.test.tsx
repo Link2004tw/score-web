@@ -33,6 +33,7 @@ vi.mock("@/components/ProtectedRoute", () => ({
 
 vi.mock("@/lib/attendance-utils", () => ({
   getTotalWednesdaysSince: () => 10,
+  getLastWednesdayDate: () => "2026-06-10",
 }));
 
 const baseStudent = {
@@ -48,6 +49,31 @@ const baseStudent = {
   createdAt: "2026-01-01T00:00:00Z",
 };
 
+const mockHistoryResponse = {
+  history: [{ date: "2026-06-10", normal: true, choir: false, choirHeld: true }],
+  normalCount: 1,
+  choirCount: 0,
+  totalWeeks: 1,
+  choirWeeks: 1,
+};
+
+function createFetchMock(
+  childResponse: Response,
+  historyResponse: Response = {
+    ok: true,
+    status: 200,
+    json: () => Promise.resolve(mockHistoryResponse),
+  } as Response,
+) {
+  return vi.spyOn(globalThis, "fetch").mockImplementation((url: RequestInfo | URL) => {
+    const urlStr = typeof url === "string" ? url : url.toString();
+    if (urlStr.includes("/api/attendance/student-history")) {
+      return Promise.resolve(historyResponse);
+    }
+    return Promise.resolve(childResponse);
+  });
+}
+
 async function renderChildPage() {
   render(<ChildPage params={Promise.resolve({ id: "child-123" })} />);
   for (let i = 0; i < 5; i++) {
@@ -60,6 +86,10 @@ describe("ChildPage", () => {
     vi.clearAllMocks();
   });
 
+  function okResponse(data: unknown): Response {
+    return { ok: true, status: 200, json: () => Promise.resolve(data) } as Response;
+  }
+
   it("shows loading state initially", async () => {
     vi.spyOn(globalThis, "fetch").mockReturnValue(new Promise(() => {}));
 
@@ -71,11 +101,7 @@ describe("ChildPage", () => {
   });
 
   it("renders student details after successful fetch", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(baseStudent),
-    } as Response);
+    createFetchMock(okResponse(baseStudent), okResponse(mockHistoryResponse));
 
     await renderChildPage();
 
@@ -104,10 +130,7 @@ describe("ChildPage", () => {
   });
 
   it("shows 404 state when student not found", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue({
-      ok: false,
-      status: 404,
-    } as Response);
+    createFetchMock({ ok: false, status: 404 } as Response);
 
     await renderChildPage();
 
@@ -118,10 +141,7 @@ describe("ChildPage", () => {
   });
 
   it("shows 404 state on fetch failure", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue({
-      ok: false,
-      status: 500,
-    } as Response);
+    createFetchMock({ ok: false, status: 500 } as Response);
 
     await renderChildPage();
 
@@ -131,10 +151,7 @@ describe("ChildPage", () => {
   });
 
   it("redirects to login on 401", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue({
-      ok: false,
-      status: 401,
-    } as Response);
+    createFetchMock({ ok: false, status: 401 } as Response);
 
     await renderChildPage();
 
@@ -144,11 +161,7 @@ describe("ChildPage", () => {
   });
 
   it("renders Edit button with correct link", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(baseStudent),
-    } as Response);
+    createFetchMock(okResponse(baseStudent), okResponse(mockHistoryResponse));
 
     await renderChildPage();
 
@@ -161,11 +174,7 @@ describe("ChildPage", () => {
   });
 
   it("opens ConfirmDialog on Delete click", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(baseStudent),
-    } as Response);
+    createFetchMock(okResponse(baseStudent), okResponse(mockHistoryResponse));
 
     const user = userEvent.setup();
     await renderChildPage();
@@ -183,11 +192,7 @@ describe("ChildPage", () => {
   });
 
   it("calls deleteChildAction and navigates to leaderboard on confirm", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(baseStudent),
-    } as Response);
+    createFetchMock(okResponse(baseStudent), okResponse(mockHistoryResponse));
 
     mockDeleteChildAction.mockResolvedValue(undefined);
     const user = userEvent.setup();
@@ -208,11 +213,7 @@ describe("ChildPage", () => {
   });
 
   it("navigates to login on delete failure", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(baseStudent),
-    } as Response);
+    createFetchMock(okResponse(baseStudent), okResponse(mockHistoryResponse));
 
     mockDeleteChildAction.mockRejectedValue(new Error("Auth error"));
     const user = userEvent.setup();
@@ -233,11 +234,7 @@ describe("ChildPage", () => {
 
   it("shows OUT badge for out-of-choir status", async () => {
     const outStudent = { ...baseStudent, choirStatus: "out" as const };
-    vi.spyOn(globalThis, "fetch").mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(outStudent),
-    } as Response);
+    createFetchMock(okResponse(outStudent), okResponse(mockHistoryResponse));
 
     await renderChildPage();
 
@@ -247,11 +244,7 @@ describe("ChildPage", () => {
   });
 
   it("shows Active for active choir status", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(baseStudent),
-    } as Response);
+    createFetchMock(okResponse(baseStudent), okResponse(mockHistoryResponse));
 
     await renderChildPage();
 
@@ -262,11 +255,7 @@ describe("ChildPage", () => {
   });
 
   it("renders ProtectedRoute and Navbar", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(baseStudent),
-    } as Response);
+    createFetchMock(okResponse(baseStudent), okResponse(mockHistoryResponse));
 
     await renderChildPage();
 
@@ -277,11 +266,7 @@ describe("ChildPage", () => {
   });
 
   it("renders Back to Leaderboard link", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(baseStudent),
-    } as Response);
+    createFetchMock(okResponse(baseStudent), okResponse(mockHistoryResponse));
 
     await renderChildPage();
 

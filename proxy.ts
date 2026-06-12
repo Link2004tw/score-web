@@ -10,6 +10,8 @@ const namedProtectedRoutes = new Set([
   "/create",
   "/attendance",
   "/attendance/history",
+  "/attendance/reports",
+  "/attendance/class",
 ]);
 
 function isProtected(pathname: string): boolean {

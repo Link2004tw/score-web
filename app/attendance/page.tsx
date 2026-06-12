@@ -212,6 +212,11 @@ export default function AttendancePage() {
                 View History
               </Button>
             </Link>
+            <Link href="/attendance/reports">
+              <Button variant="ghost" size="sm" className="max-sm:min-h-[44px]">
+                View Reports
+              </Button>
+            </Link>
             {activeTab === "choir" && children.length > 0 && (
               <Button
                 variant="destructive"

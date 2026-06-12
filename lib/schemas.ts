@@ -9,6 +9,8 @@ export const gradeValues = [
   "4 primary",
   "5 primary",
   "6 primary",
+  "4 years",
+  "5 years",
 ] as const;
 
 export const childSchema = z.object({

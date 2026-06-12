@@ -29,6 +29,8 @@
     "clsx": "^2.1.1",
     "firebase": "^12.14.0",
     "firebase-admin": "^13.10.0",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.8",
     "next": "16.2.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
@@ -61,7 +63,8 @@
     "shadcn": "^4.9.0",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^3.1.1"
+    "vitest": "^3.1.1",
+    "xlsx": "^0.18.5"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,md,json,css}": [
