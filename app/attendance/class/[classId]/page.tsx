@@ -68,28 +68,24 @@ export default function ClassDetailPage({ params }: { params: Promise<{ classId:
 
   const lastWednesday = useMemo(() => getLastWednesdayDate(), []);
 
-  const initDate = useMemo(() => {
-    const d = new Date();
-    d.setFullYear(d.getFullYear() - 1);
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, "0");
-    const dd = String(d.getDate()).padStart(2, "0");
-    return `${y}-${m}-${dd}`;
-    // snap to nearest wed
-  }, []);
+  const startDate = useMemo(() => process.env.NEXT_PUBLIC_REPORT_START_DATE ?? "", []);
 
   useEffect(() => {
+    if (!startDate) return;
     const fetchReport = async () => {
       setLoading(true);
       setError(null);
       try {
         const params = new URLSearchParams();
-        params.set("from", initDate);
+        params.set("from", startDate);
         params.set("grade", classInfo.grade);
         if (classInfo.gender) params.set("gender", classInfo.gender);
         const res = await fetch(`/api/attendance/report?${params}`);
         if (res.status === 401) throw new Error("Unauthorized");
-        if (!res.ok) throw new Error("Failed to fetch");
+        if (!res.ok) {
+          console.error("Failed to fetch report:", res.status, await res.text());
+          throw new Error("Failed to fetch");
+        }
         const json = (await res.json()) as ReportData;
         setData(json);
       } catch (e) {
@@ -99,7 +95,7 @@ export default function ClassDetailPage({ params }: { params: Promise<{ classId:
       setLoading(false);
     };
     fetchReport();
-  }, [classInfo, initDate, router]);
+  }, [classInfo, startDate, router]);
 
   const studentReports = useMemo(() => {
     if (!data) return [];

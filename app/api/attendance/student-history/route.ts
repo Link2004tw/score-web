@@ -5,6 +5,9 @@ import { requireAuthApi, AuthError } from "@/lib/verify-auth";
 import { rateLimit } from "@/lib/rate-limit";
 import { getLastWednesdayDate, getAllWednesdaysInRange } from "@/lib/attendance-utils";
 
+const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const MAX_WEEKS = 52;
+
 interface WeekEntry {
   date: string;
   normal: boolean;
@@ -36,42 +39,69 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(from)) {
+      return NextResponse.json(
+        { error: `invalid date format: "${from}" — expected YYYY-MM-DD` },
+        { status: 400 },
+      );
+    }
+
     const parsedFrom = new Date(from + "T00:00:00");
+    if (isNaN(parsedFrom.getTime())) {
+      return NextResponse.json({ error: `invalid date: "${from}"` }, { status: 400 });
+    }
+
     if (parsedFrom.getDay() !== 3) {
-      return NextResponse.json({ error: "from date must be a Wednesday" }, { status: 400 });
+      return NextResponse.json(
+        {
+          error: `from date must be a Wednesday, got ${from} (${DAY_NAMES[parsedFrom.getDay()]})`,
+        },
+        { status: 400 },
+      );
     }
 
     const to = getLastWednesdayDate();
+    const parsedTo = new Date(to + "T00:00:00");
+
+    if (parsedFrom > parsedTo) {
+      return NextResponse.json(
+        { error: `from date (${from}) must not be after the last Wednesday (${to})` },
+        { status: 400 },
+      );
+    }
+
     const weeks = getAllWednesdaysInRange(from, to);
+    if (weeks.length > MAX_WEEKS) {
+      return NextResponse.json(
+        { error: `date range too large (${weeks.length} weeks, max ${MAX_WEEKS})` },
+        { status: 400 },
+      );
+    }
 
-    const sessionPromises = weeks.flatMap((date) => [
-      adminDb
-        .collection("attendance-sessions")
-        .doc(`${date}_normal`)
-        .get()
-        .then((snap) => ({ date, type: "normal" as const, snap })),
-      adminDb
-        .collection("attendance-sessions")
-        .doc(`${date}_choir`)
-        .get()
-        .then((snap) => ({ date, type: "choir" as const, snap })),
-    ]);
-
-    const results = await Promise.all(sessionPromises);
+    const sessionResults = await Promise.allSettled(
+      weeks.flatMap((date) => [
+        adminDb
+          .collection("attendance-sessions")
+          .doc(`${date}_normal`)
+          .get()
+          .then((snap) => ({ date, type: "normal" as const, snap })),
+        adminDb
+          .collection("attendance-sessions")
+          .doc(`${date}_choir`)
+          .get()
+          .then((snap) => ({ date, type: "choir" as const, snap })),
+      ]),
+    );
 
     const weekMap = new Map<string, WeekEntry>();
     for (const week of weeks) {
       weekMap.set(week, { date: week, normal: false, choir: false, choirHeld: false });
     }
 
-    for (const { date, type, snap } of results) {
-      if (!snap.exists) {
-        if (type === "choir") {
-          const entry = weekMap.get(date);
-          if (entry) entry.choirHeld = false;
-        }
-        continue;
-      }
+    for (const result of sessionResults) {
+      if (result.status === "rejected") continue;
+      const { date, type, snap } = result.value;
+      if (!snap.exists) continue;
       if (type === "choir") {
         const entry = weekMap.get(date);
         if (entry) entry.choirHeld = true;

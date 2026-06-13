@@ -1,3 +1,16 @@
+export function getLastWednesdayForDate(dateStr: string): string {
+  const d = new Date(dateStr + "T00:00:00");
+  if (isNaN(d.getTime())) return dateStr;
+  const day = d.getDay();
+  const daysSinceWednesday = (day - 3 + 7) % 7;
+  const lastWed = new Date(d);
+  lastWed.setDate(d.getDate() - daysSinceWednesday);
+  const y = lastWed.getFullYear();
+  const m = String(lastWed.getMonth() + 1).padStart(2, "0");
+  const dd = String(lastWed.getDate()).padStart(2, "0");
+  return `${y}-${m}-${dd}`;
+}
+
 export function getLastWednesdayDate(): string {
   const now = new Date();
   const day = now.getDay();

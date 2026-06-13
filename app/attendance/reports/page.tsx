@@ -197,7 +197,10 @@ export default function ReportsPage() {
         if (genderFilter) params.set("gender", genderFilter);
         const res = await fetch(`/api/attendance/report?${params}`);
         if (res.status === 401) throw new Error("Unauthorized");
-        if (!res.ok) throw new Error("Failed to fetch report");
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.error ?? `Request failed (${res.status})`);
+        }
         const json = (await res.json()) as ReportData;
         setData(json);
       } catch (e) {

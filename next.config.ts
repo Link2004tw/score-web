@@ -66,7 +66,6 @@ export default withBundleAnalyzer({ enabled: process.env.ANALYZE === "true" })(
     org: "no-company-m3d",
     project: "score-web",
     authToken: process.env.SENTRY_AUTH_TOKEN,
-    tunnelRoute: "/sentry-tunnel",
     widenClientFileUpload: true,
     silent: !process.env.CI,
   }),
